@@ -32,11 +32,13 @@ export default function RubricPage() {
   const [genError, setGenError] = useState('');
   const [copied, setCopied] = useState(false);
   const [slow, setSlow] = useState(false);
+  const [almostReady, setAlmostReady] = useState(false);
 
   useEffect(() => {
-    if (!loading) { setSlow(false); return; }
-    const t = setTimeout(() => setSlow(true), 8000);
-    return () => clearTimeout(t);
+    if (!loading) { setSlow(false); setAlmostReady(false); return; }
+    const t1 = setTimeout(() => setSlow(true), 8000);
+    const t2 = setTimeout(() => setAlmostReady(true), 15000);
+    return () => { clearTimeout(t1); clearTimeout(t2); };
   }, [loading]);
 
   function validate() {
@@ -138,9 +140,14 @@ Keep language clear and appropriate for ${grade} students.`;
             </div>
           </div>
           {genError && <p className="text-sm text-red-600">{genError}</p>}
-          {loading && slow && (
+          {loading && slow && !almostReady && (
             <p className="text-sm text-ink-muted">
               Your rubric is being built — please hang on a few more seconds…
+            </p>
+          )}
+          {loading && almostReady && (
+            <p className="text-sm text-ink-muted">
+              Almost ready — adding the final touches…
             </p>
           )}
           <Button loading={loading} onClick={handleGenerate} className="self-end">
