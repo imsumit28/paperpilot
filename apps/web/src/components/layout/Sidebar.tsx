@@ -15,11 +15,11 @@ import {
   X,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { listAssignments } from '@/lib/api';
 import { VedaLogo } from './VedaLogo';
 import { UserAvatar } from './UserAvatar';
 import { useUIStore, type ToolkitOption } from '@/store/useUIStore';
 import { useAuthStore } from '@/store/useAuthStore';
+import { useAssignmentCountStore } from '@/store/useAssignmentCountStore';
 
 interface NavItem {
   href: string;
@@ -126,7 +126,7 @@ function MyLibraryIcon({ className }: { className?: string }) {
   );
 }
 
-export function Sidebar({ assignmentCount = 0 }: { assignmentCount?: number }) {
+export function Sidebar({ assignmentCount }: { assignmentCount?: number } = {}) {
   const pathname = usePathname();
   const router = useRouter();
   const sidebarOpen = useUIStore((s) => s.sidebarOpen);
@@ -135,7 +135,9 @@ export function Sidebar({ assignmentCount = 0 }: { assignmentCount?: number }) {
   const schoolAddress = useAuthStore((s) => s.schoolAddress);
   const schoolLogo = useAuthStore((s) => s.schoolLogo);
   const toolkit = useUIStore((s) => s.toolkit);
-  const [assignmentTotal, setAssignmentTotal] = useState(assignmentCount);
+  const assignmentTotal = useAssignmentCountStore((s) => s.count);
+  const setCount = useAssignmentCountStore((s) => s.setCount);
+  const refreshCount = useAssignmentCountStore((s) => s.refresh);
   const [toolkitOpen, setToolkitOpen] = useState(false);
   const toolkitMenuRef = useRef<HTMLDivElement | null>(null);
 
@@ -168,27 +170,29 @@ export function Sidebar({ assignmentCount = 0 }: { assignmentCount?: number }) {
   }
 
   useEffect(() => {
-    let cancelled = false;
+    if (typeof assignmentCount === 'number') setCount(assignmentCount);
+  }, [assignmentCount, setCount]);
 
-    async function loadAssignmentCount() {
-      try {
-        const data = await listAssignments(1, 1);
-        if (!cancelled) {
-          setAssignmentTotal(data.total);
-        }
-      } catch {
-        if (!cancelled) {
-          setAssignmentTotal(assignmentCount);
-        }
-      }
+  useEffect(() => {
+    refreshCount();
+
+    function onFocus() {
+      refreshCount();
     }
-
-    loadAssignmentCount();
-
+    function onVisibility() {
+      if (document.visibilityState === 'visible') refreshCount();
+    }
+    window.addEventListener('focus', onFocus);
+    document.addEventListener('visibilitychange', onVisibility);
     return () => {
-      cancelled = true;
+      window.removeEventListener('focus', onFocus);
+      document.removeEventListener('visibilitychange', onVisibility);
     };
-  }, [assignmentCount]);
+  }, [refreshCount]);
+
+  useEffect(() => {
+    refreshCount();
+  }, [pathname, refreshCount]);
 
   return (
     <>

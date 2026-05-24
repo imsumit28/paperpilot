@@ -16,9 +16,12 @@ import {
   type FilterBarValue,
 } from '@/components/assignments/FilterBar';
 import { listAssignments, deleteAssignment } from '@/lib/api';
+import { useAssignmentCountStore } from '@/store/useAssignmentCountStore';
 
 export default function AssignmentsPage() {
   const router = useRouter();
+  const setCount = useAssignmentCountStore((s) => s.setCount);
+  const decrementCount = useAssignmentCountStore((s) => s.decrement);
   const [items, setItems] = useState<AssignmentDto[]>([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState('');
@@ -33,6 +36,7 @@ export default function AssignmentsPage() {
       setLoading(true);
       const data = await listAssignments(1, 50);
       setItems(data.items);
+      setCount(data.total ?? data.items.length);
       setError(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load');
@@ -89,6 +93,7 @@ export default function AssignmentsPage() {
     try {
       await deleteAssignment(id);
       setItems((prev) => prev.filter((a) => a.id !== id));
+      decrementCount(1);
       toast.success('Assignment deleted');
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Delete failed');
@@ -118,6 +123,7 @@ export default function AssignmentsPage() {
     const failed = results.filter((r) => r.status === 'rejected');
     const succeededIds = ids.filter((_, i) => results[i].status === 'fulfilled');
     setItems((prev) => prev.filter((a) => !succeededIds.includes(a.id)));
+    if (succeededIds.length) decrementCount(succeededIds.length);
     exitSelectionMode();
     setBulkDeleting(false);
     if (failed.length === 0) {

@@ -21,6 +21,7 @@ import { VoiceInputButton } from '@/components/create/VoiceInputButton';
 import { useAssignmentDraftStore } from '@/store/useAssignmentDraftStore';
 import { useAuthStore } from '@/store/useAuthStore';
 import { useGenerationStore } from '@/store/useGenerationStore';
+import { useAssignmentCountStore } from '@/store/useAssignmentCountStore';
 import { createAssignment } from '@/lib/api';
 import { todayIsoDate } from '@/lib/utils';
 
@@ -29,6 +30,7 @@ export default function NewAssignmentPage() {
   const draft = useAssignmentDraftStore();
   const schoolName = useAuthStore((s) => s.schoolName);
   const startGen = useGenerationStore((s) => s.start);
+  const incrementAssignmentCount = useAssignmentCountStore((s) => s.increment);
   const [file, setFile] = useState<File | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -118,6 +120,7 @@ export default function NewAssignmentPage() {
             : new Date(parsed.data.dueDate).toISOString(),
       };
       const res = await createAssignment(apiPayload, file);
+      incrementAssignmentCount(1);
       startGen(res.id, res.jobId);
       router.push(`/assignments/${res.id}`);
       draft.reset();
