@@ -1,0 +1,61 @@
+# Render blueprint — deploys API + Worker from this monorepo.
+# Both services share env vars; set them in the Render dashboard or via a Render Env Group.
+# Build relies on pnpm via corepack. Render images include corepack by default for Node 20.
+
+services:
+  - type: web
+    name: paper-pilot-api
+    env: node
+    region: oregon
+    plan: free
+    rootDir: .
+    buildCommand: |
+      corepack enable && corepack prepare pnpm@9.4.0 --activate
+      pnpm install --frozen-lockfile
+      pnpm --filter @paper-pilot/shared build
+      pnpm --filter @paper-pilot/api build
+    startCommand: pnpm --filter @paper-pilot/api start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: API_PORT
+        value: 10000
+      - key: CORS_ORIGIN
+        sync: false
+      - key: MONGODB_URI
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: LOG_LEVEL
+        value: info
+
+  - type: worker
+    name: paper-pilot-worker
+    env: node
+    region: oregon
+    plan: free
+    rootDir: .
+    buildCommand: |
+      corepack enable && corepack prepare pnpm@9.4.0 --activate
+      pnpm install --frozen-lockfile
+      pnpm --filter @paper-pilot/shared build
+      pnpm --filter @paper-pilot/worker build
+    startCommand: pnpm --filter @paper-pilot/worker start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: DEEPSEEK_API_KEY
+        sync: false
+      - key: DEEPSEEK_MODEL
+        value: deepseek-chat
+      - key: DEEPSEEK_TIMEOUT_MS
+        value: 60000
+      - key: WORKER_CONCURRENCY
+        value: 2
+      - key: LOG_LEVEL
+        value: info

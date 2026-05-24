@@ -1,0 +1,27 @@
+{
+  "name": "paper-pilot",
+  "version": "1.0.0",
+  "private": true,
+  "description": "VedaAI Assessment Creator — AI-powered question paper generation with structured output, queues, and real-time progress.",
+  "packageManager": "pnpm@9.4.0",
+  "scripts": {
+    "dev": "pnpm -r --parallel run dev",
+    "dev:api": "pnpm --filter @paper-pilot/api dev",
+    "dev:worker": "pnpm --filter @paper-pilot/worker dev",
+    "dev:web": "pnpm --filter @paper-pilot/web dev",
+    "build": "pnpm --filter @paper-pilot/shared build && pnpm -r --filter \"!@paper-pilot/shared\" build",
+    "build:shared": "pnpm --filter @paper-pilot/shared build",
+    "build:api": "pnpm --filter @paper-pilot/api build",
+    "build:worker": "pnpm --filter @paper-pilot/worker build",
+    "build:web": "pnpm --filter @paper-pilot/web build",
+    "start:api": "pnpm --filter @paper-pilot/api start",
+    "start:worker": "pnpm --filter @paper-pilot/worker start",
+    "typecheck": "pnpm -r run typecheck"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5"
+  },
+  "engines": {
+    "node": ">=18.17.0"
+  }
+}

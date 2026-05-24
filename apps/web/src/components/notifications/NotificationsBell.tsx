@@ -1,0 +1,163 @@
+'use client';
+
+import Link from 'next/link';
+import { useEffect, useRef, useState } from 'react';
+import { AlertCircle, Bell, CheckCircle2, Info, X } from 'lucide-react';
+import { useNotificationsStore } from '@/store/useNotificationsStore';
+
+function formatRelative(ts: number): string {
+  const diffSec = Math.max(0, Math.floor((Date.now() - ts) / 1000));
+  if (diffSec < 60) return 'just now';
+  const min = Math.floor(diffSec / 60);
+  if (min < 60) return `${min}m ago`;
+  const hr = Math.floor(min / 60);
+  if (hr < 24) return `${hr}h ago`;
+  const days = Math.floor(hr / 24);
+  return `${days}d ago`;
+}
+
+export function NotificationsBell() {
+  const items = useNotificationsStore((s) => s.items);
+  const markAllRead = useNotificationsStore((s) => s.markAllRead);
+  const remove = useNotificationsStore((s) => s.remove);
+  const clear = useNotificationsStore((s) => s.clear);
+
+  const [open, setOpen] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
+
+  const unreadCount = items.filter((i) => !i.read).length;
+
+  useEffect(() => {
+    if (!open) return;
+    function onDocClick(e: MouseEvent) {
+      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') setOpen(false);
+    }
+    document.addEventListener('mousedown', onDocClick);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onDocClick);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [open]);
+
+  useEffect(() => {
+    if (open && unreadCount > 0) {
+      const t = setTimeout(() => markAllRead(), 400);
+      return () => clearTimeout(t);
+    }
+  }, [open, unreadCount, markAllRead]);
+
+  return (
+    <div ref={wrapperRef} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="relative h-9 w-9 flex items-center justify-center rounded-full bg-[#F6F6F6] hover:bg-[#EDEDED] lg:h-9 lg:w-9"
+        aria-label={
+          unreadCount > 0 ? `Notifications, ${unreadCount} unread` : 'Notifications'
+        }
+      >
+        <Bell className="h-5 w-5 text-[#303030]" strokeWidth={2} />
+        {unreadCount > 0 ? (
+          <span className="absolute -top-0.5 -right-0.5 inline-flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-[#FF5623] px-1 text-[10px] font-semibold leading-none text-white shadow-[0_0_0_2px_white]">
+            {unreadCount > 9 ? '9+' : unreadCount}
+          </span>
+        ) : items.length > 0 ? (
+          <span className="absolute top-[1px] right-[1px] h-2 w-2 rounded-full bg-[#FF5623]" />
+        ) : null}
+      </button>
+
+      {open && (
+        <div className="absolute right-0 top-12 z-40 w-[320px] rounded-2xl border border-black/10 bg-white shadow-[0px_16px_48px_rgba(0,0,0,0.18)]">
+          <div className="flex items-center justify-between border-b border-black/5 px-4 py-3">
+            <span className="text-[14px] font-semibold tracking-[-0.02em] text-[#303030]">
+              Notifications
+            </span>
+            {items.length > 0 && (
+              <button
+                type="button"
+                onClick={() => clear()}
+                className="text-[12px] font-medium tracking-[-0.02em] text-[#5E5E5E] hover:text-[#303030]"
+              >
+                Clear all
+              </button>
+            )}
+          </div>
+
+          <div className="max-h-[360px] overflow-y-auto px-2 py-2">
+            {items.length === 0 ? (
+              <div className="px-3 py-8 text-center text-[13px] text-[#8A8A8A]">
+                No notifications yet.
+              </div>
+            ) : (
+              <ul className="flex flex-col gap-1">
+                {items.map((n) => {
+                  const Icon =
+                    n.type === 'success'
+                      ? CheckCircle2
+                      : n.type === 'error'
+                        ? AlertCircle
+                        : Info;
+                  const color =
+                    n.type === 'success'
+                      ? 'text-emerald-500'
+                      : n.type === 'error'
+                        ? 'text-red-500'
+                        : 'text-blue-500';
+                  const body = (
+                    <div className="flex items-start gap-3 rounded-xl px-3 py-2 hover:bg-[#F6F6F6]">
+                      <Icon className={`mt-0.5 h-4 w-4 shrink-0 ${color}`} />
+                      <div className="min-w-0 flex-1">
+                        <div className="truncate text-[13px] font-semibold tracking-[-0.02em] text-[#303030]">
+                          {n.title}
+                        </div>
+                        <div className="truncate text-[12px] text-[#5E5E5E]">
+                          {n.message}
+                        </div>
+                        <div className="mt-0.5 text-[11px] text-[#8A8A8A]">
+                          {formatRelative(n.createdAt)}
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          remove(n.id);
+                        }}
+                        aria-label="Dismiss"
+                        className="shrink-0 rounded-full p-1 text-[#A9A9A9] hover:bg-black/5 hover:text-[#303030]"
+                      >
+                        <X className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  );
+                  return (
+                    <li key={n.id}>
+                      {n.assignmentId ? (
+                        <Link
+                          href={`/assignments/${n.assignmentId}`}
+                          onClick={() => setOpen(false)}
+                          className="block"
+                        >
+                          {body}
+                        </Link>
+                      ) : (
+                        body
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
