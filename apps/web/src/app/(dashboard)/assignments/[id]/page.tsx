@@ -46,7 +46,7 @@ export default function AssignmentDetailPage() {
       setFetchError(null);
       if (dto.status === 'pending' || dto.status === 'processing') {
         if (useGenerationStore.getState().status === 'idle') {
-          startGen(dto.id, dto.jobId ?? '');
+          startGen(dto.id, dto.jobId ?? '', dto.title);
         }
       }
     } catch (err) {
@@ -96,7 +96,7 @@ export default function AssignmentDetailPage() {
         const res = await regenerateAssignment(current.id, {
           additionalInfoAppend: options.additionalInfoAppend,
         });
-        startGen(res.id, res.jobId);
+        startGen(res.id, res.jobId, current.title);
         await refresh();
         toast.success(options.toastLabel ?? 'Regeneration started');
       } catch (err) {

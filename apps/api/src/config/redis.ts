@@ -17,11 +17,10 @@ function create(label: string): Redis {
   return conn;
 }
 
-// Three logical connections: BullMQ requires its own; pub/sub need separate connections.
+// Single connection — BullMQ Queue and PDF cache reads share it. Progress
+// updates now flow worker -> API over HTTP, so Pub/Sub connections are gone.
 export const redisQueue: Redis = create('queue');
-export const redisPub: Redis = create('pub');
-export const redisSub: Redis = create('sub');
 
 export async function disconnectRedis(): Promise<void> {
-  await Promise.allSettled([redisQueue.quit(), redisPub.quit(), redisSub.quit()]);
+  await Promise.allSettled([redisQueue.quit()]);
 }

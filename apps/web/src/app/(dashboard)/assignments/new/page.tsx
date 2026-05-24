@@ -121,7 +121,7 @@ export default function NewAssignmentPage() {
       };
       const res = await createAssignment(apiPayload, file);
       incrementAssignmentCount(1);
-      startGen(res.id, res.jobId);
+      startGen(res.id, res.jobId, parsed.data.title);
       router.push(`/assignments/${res.id}`);
       draft.reset();
     } catch (err) {

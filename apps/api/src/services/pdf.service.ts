@@ -1,5 +1,3 @@
-import { QueueEvents } from 'bullmq';
-import { QUEUE_NAMES } from '@paper-pilot/shared';
 import { redisQueue } from '../config/redis';
 import { pdfQueue } from '../queues/pdf.queue';
 import { notFound } from '../middleware/errorHandler';
@@ -8,15 +6,8 @@ import { logger } from '../config/logger';
 
 const PDF_KEY = (id: string) => `pdf:${id}`;
 const PDF_TTL_SECONDS = 60 * 60 * 24; // 1 day
-
-const pdfQueueEvents = new QueueEvents(QUEUE_NAMES.pdf, {
-  connection: redisQueue.duplicate(),
-});
-
-pdfQueueEvents.on('completed', ({ jobId }) => logger.debug({ jobId }, 'pdf job completed'));
-pdfQueueEvents.on('failed', ({ jobId, failedReason }) =>
-  logger.warn({ jobId, failedReason }, 'pdf job failed'),
-);
+const PDF_WAIT_TIMEOUT_MS = 45_000;
+const PDF_POLL_INTERVAL_MS = 500;
 
 export async function getCachedPdf(id: string): Promise<Buffer | null> {
   const raw = await redisQueue.getBuffer(PDF_KEY(id));
@@ -36,30 +27,36 @@ export async function ensurePdf(id: string): Promise<Buffer> {
     throw err;
   }
 
-  const job = await pdfQueue.add(
+  // Flip the flag off so we can poll Mongo for it flipping back on. Mongo
+  // queries are free; the prior approach used QueueEvents which kept a
+  // continuous XREAD polling loop on Upstash.
+  if (doc.pdfReady) {
+    await AssignmentModel.updateOne({ _id: id }, { $set: { pdfReady: false } });
+  }
+
+  await pdfQueue.add(
     'pdf',
     { assignmentId: id },
     { jobId: `pdf-${id}-${Date.now()}` },
   );
 
-  try {
-    await job.waitUntilFinished(pdfQueueEvents, 45_000);
-  } catch (err) {
-    logger.error({ err, id }, 'PDF job did not finish in time');
-    const e: Error & { status?: number; code?: string } = new Error('PDF generation timed out');
-    e.status = 504;
-    e.code = 'PDF_TIMEOUT';
-    throw e;
+  const startedAt = Date.now();
+  while (Date.now() - startedAt < PDF_WAIT_TIMEOUT_MS) {
+    await new Promise((r) => setTimeout(r, PDF_POLL_INTERVAL_MS));
+    const fresh = await AssignmentModel.findById(id).select('pdfReady').lean();
+    if (fresh?.pdfReady) {
+      const buf = await getCachedPdf(id);
+      if (buf) return buf;
+      // pdfReady was set but the cache buffer is missing — treat as a failure.
+      logger.warn({ id }, 'pdfReady true but Redis cache missing');
+      break;
+    }
   }
 
-  const buf = await getCachedPdf(id);
-  if (!buf) {
-    const e: Error & { status?: number; code?: string } = new Error('PDF generation failed');
-    e.status = 500;
-    e.code = 'PDF_FAILED';
-    throw e;
-  }
-  return buf;
+  const e: Error & { status?: number; code?: string } = new Error('PDF generation timed out');
+  e.status = 504;
+  e.code = 'PDF_TIMEOUT';
+  throw e;
 }
 
 export const PDF_CACHE = { key: PDF_KEY, ttlSeconds: PDF_TTL_SECONDS };

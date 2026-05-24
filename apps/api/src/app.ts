@@ -6,6 +6,7 @@ import { env } from './config/env';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
 import assignmentsRoutes from './routes/assignments.routes';
 import healthRoutes from './routes/health.routes';
+import internalRoutes from './routes/internal.routes';
 
 export function createApp() {
   const app = express();
@@ -23,6 +24,7 @@ export function createApp() {
 
   app.use('/api/health', healthRoutes);
   app.use('/api/assignments', assignmentsRoutes);
+  app.use('/internal', internalRoutes);
 
   app.use(notFoundHandler);
   app.use(errorHandler);

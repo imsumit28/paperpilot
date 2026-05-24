@@ -1,53 +1,76 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { SOCKET_EVENTS, type JobCompletePayload, type JobFailedPayload } from '@paper-pilot/shared';
 import { listAssignments } from '@/lib/api';
+import { getSocket } from '@/lib/socket';
+import { subscribeToJob, unsubscribeFromJob } from '@/lib/jobSubscriptions';
 import { useNotificationsStore } from '@/store/useNotificationsStore';
-
-const POLL_INTERVAL_MS = 8000;
+import { useGenerationStore } from '@/store/useGenerationStore';
 
 export function NotificationsProvider() {
-  const lastSeenRef = useRef<Map<string, string> | null>(null);
-  const initializedRef = useRef(false);
+  // assignmentId -> title for every in-progress assignment we're watching
+  const trackedRef = useRef<Map<string, string>>(new Map());
   const addCompletion = useNotificationsStore((s) => s.addCompletion);
   const addFailure = useNotificationsStore((s) => s.addFailure);
+  const activeId = useGenerationStore((s) => s.assignmentId);
+  const activeTitle = useGenerationStore((s) => s.title);
+  const activeStatus = useGenerationStore((s) => s.status);
+
+  // Track assignments that just started generating (status === 'subscribed' means
+  // startGen was just called — the socket room hasn't been joined yet by useJobProgress
+  // if the user is navigating, so we maintain our own subscription here).
+  useEffect(() => {
+    if (!activeId || !activeTitle || activeStatus !== 'subscribed') return;
+    if (trackedRef.current.has(activeId)) return;
+    trackedRef.current.set(activeId, activeTitle);
+    subscribeToJob(activeId);
+  }, [activeId, activeTitle, activeStatus]);
 
   useEffect(() => {
-    let cancelled = false;
+    const socket = getSocket();
 
-    async function tick() {
-      try {
-        const data = await listAssignments(1, 20);
-        if (cancelled) return;
-        const prev = lastSeenRef.current;
-        const next = new Map<string, string>();
+    const onComplete = (p: JobCompletePayload) => {
+      const title = trackedRef.current.get(p.assignmentId);
+      if (title !== undefined) {
+        addCompletion({ assignmentId: p.assignmentId, title });
+        unsubscribeFromJob(p.assignmentId);
+        trackedRef.current.delete(p.assignmentId);
+      }
+    };
+
+    const onFailed = (p: JobFailedPayload) => {
+      const title = trackedRef.current.get(p.assignmentId);
+      if (title !== undefined) {
+        addFailure({ assignmentId: p.assignmentId, title });
+        unsubscribeFromJob(p.assignmentId);
+        trackedRef.current.delete(p.assignmentId);
+      }
+    };
+
+    socket.on(SOCKET_EVENTS.JOB_COMPLETE, onComplete);
+    socket.on(SOCKET_EVENTS.JOB_FAILED, onFailed);
+
+    // One-time fetch to discover assignments that were already in-progress
+    // when the app loaded (e.g. user refreshed the page mid-generation).
+    listAssignments(1, 50)
+      .then((data) => {
         for (const a of data.items) {
-          next.set(a.id, a.status);
-        }
-        if (prev) {
-          for (const a of data.items) {
-            const before = prev.get(a.id);
-            if (!before) continue;
-            if (before === a.status) continue;
-            if (a.status === 'completed' && before !== 'completed') {
-              addCompletion({ assignmentId: a.id, title: a.title });
-            } else if (a.status === 'failed' && before !== 'failed') {
-              addFailure({ assignmentId: a.id, title: a.title });
-            }
+          if ((a.status === 'pending' || a.status === 'processing') && !trackedRef.current.has(a.id)) {
+            trackedRef.current.set(a.id, a.title);
+            subscribeToJob(a.id);
           }
         }
-        lastSeenRef.current = next;
-        initializedRef.current = true;
-      } catch {
-        /* swallow — background poll, retry next tick */
-      }
-    }
+      })
+      .catch(() => {});
 
-    tick();
-    const id = setInterval(tick, POLL_INTERVAL_MS);
     return () => {
-      cancelled = true;
-      clearInterval(id);
+      socket.off(SOCKET_EVENTS.JOB_COMPLETE, onComplete);
+      socket.off(SOCKET_EVENTS.JOB_FAILED, onFailed);
+      for (const [id] of trackedRef.current) {
+        unsubscribeFromJob(id);
+      }
+      trackedRef.current.clear();
     };
   }, [addCompletion, addFailure]);
 

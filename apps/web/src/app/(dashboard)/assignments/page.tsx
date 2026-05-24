@@ -1,11 +1,16 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, CheckSquare, Plus, Trash2, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import type { AssignmentDto } from '@paper-pilot/shared';
+import {
+  SOCKET_EVENTS,
+  type AssignmentDto,
+  type JobCompletePayload,
+  type JobFailedPayload,
+} from '@paper-pilot/shared';
 import { Topbar } from '@/components/layout/Topbar';
 import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/assignments/EmptyState';
@@ -16,6 +21,8 @@ import {
   type FilterBarValue,
 } from '@/components/assignments/FilterBar';
 import { listAssignments, deleteAssignment } from '@/lib/api';
+import { getSocket } from '@/lib/socket';
+import { subscribeToJob, unsubscribeFromJob } from '@/lib/jobSubscriptions';
 import { useAssignmentCountStore } from '@/store/useAssignmentCountStore';
 
 export default function AssignmentsPage() {
@@ -47,8 +54,45 @@ export default function AssignmentsPage() {
 
   useEffect(() => {
     refresh();
-    const id = setInterval(refresh, 8000); // light polling in case sockets miss something
-    return () => clearInterval(id);
+  }, []);
+
+  // Track subscriptions for in-progress items so we can update their status in-place
+  // without polling. pendingIdsRef holds the set currently subscribed.
+  const pendingIdsRef = useRef<Set<string>>(new Set());
+
+  useEffect(() => {
+    const newPending = new Set(
+      items.filter((a) => a.status === 'pending' || a.status === 'processing').map((a) => a.id),
+    );
+    for (const id of newPending) {
+      if (!pendingIdsRef.current.has(id)) subscribeToJob(id);
+    }
+    for (const id of pendingIdsRef.current) {
+      if (!newPending.has(id)) unsubscribeFromJob(id);
+    }
+    pendingIdsRef.current = newPending;
+  }, [items]);
+
+  useEffect(() => {
+    const socket = getSocket();
+    const onComplete = (p: JobCompletePayload) => {
+      setItems((prev) =>
+        prev.map((a) => (a.id === p.assignmentId ? { ...a, status: 'completed' as const } : a)),
+      );
+    };
+    const onFailed = (p: JobFailedPayload) => {
+      setItems((prev) =>
+        prev.map((a) => (a.id === p.assignmentId ? { ...a, status: 'failed' as const } : a)),
+      );
+    };
+    socket.on(SOCKET_EVENTS.JOB_COMPLETE, onComplete);
+    socket.on(SOCKET_EVENTS.JOB_FAILED, onFailed);
+    return () => {
+      socket.off(SOCKET_EVENTS.JOB_COMPLETE, onComplete);
+      socket.off(SOCKET_EVENTS.JOB_FAILED, onFailed);
+      for (const id of pendingIdsRef.current) unsubscribeFromJob(id);
+      pendingIdsRef.current = new Set();
+    };
   }, []);
 
   const filtered = useMemo(() => {

@@ -14,9 +14,9 @@ function create(label: string): Redis {
   return conn;
 }
 
+// Single connection used by BullMQ Worker and PDF cache writes.
 export const redisQueue: Redis = create('queue');
-export const redisPub: Redis = create('pub');
 
 export async function disconnectRedis(): Promise<void> {
-  await Promise.allSettled([redisQueue.quit(), redisPub.quit()]);
+  await Promise.allSettled([redisQueue.quit()]);
 }

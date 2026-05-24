@@ -3,7 +3,6 @@ import { Server as IOServer, type Socket } from 'socket.io';
 import { SOCKET_EVENTS, type SubscribePayload } from '@paper-pilot/shared';
 import { env } from '../config/env';
 import { logger } from '../config/logger';
-import { startProgressBridge } from './progress.bridge';
 
 let io: IOServer | null = null;
 
@@ -44,7 +43,6 @@ export function initSockets(httpServer: HttpServer): IOServer {
     });
   });
 
-  startProgressBridge(io);
   return io;
 }
 

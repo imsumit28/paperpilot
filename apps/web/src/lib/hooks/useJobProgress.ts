@@ -8,6 +8,7 @@ import {
   type JobProgressPayload,
 } from '@paper-pilot/shared';
 import { getSocket } from '../socket';
+import { subscribeToJob, unsubscribeFromJob } from '../jobSubscriptions';
 import { useGenerationStore } from '@/store/useGenerationStore';
 
 export function useJobProgress(assignmentId: string | null) {
@@ -19,9 +20,7 @@ export function useJobProgress(assignmentId: string | null) {
     if (!assignmentId) return;
     const socket = getSocket();
 
-    const subscribe = () => {
-      socket.emit(SOCKET_EVENTS.SUBSCRIBE_JOB, { assignmentId });
-    };
+    const subscribe = () => subscribeToJob(assignmentId);
 
     const onProgress = (p: JobProgressPayload) => {
       if (p.assignmentId === assignmentId) applyProgress(p);
@@ -41,7 +40,7 @@ export function useJobProgress(assignmentId: string | null) {
     socket.on(SOCKET_EVENTS.JOB_FAILED, onFailed);
 
     return () => {
-      socket.emit(SOCKET_EVENTS.UNSUBSCRIBE_JOB, { assignmentId });
+      unsubscribeFromJob(assignmentId);
       socket.off('connect', subscribe);
       socket.off(SOCKET_EVENTS.JOB_PROGRESS, onProgress);
       socket.off(SOCKET_EVENTS.JOB_COMPLETE, onComplete);

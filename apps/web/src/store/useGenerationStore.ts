@@ -12,13 +12,14 @@ import type {
 interface GenerationState {
   assignmentId: string | null;
   jobId: string | null;
+  title: string | null;
   percent: number;
   step: GenerationStep | null;
   message: string;
   status: 'idle' | 'subscribed' | 'progress' | 'complete' | 'failed';
   paper: QuestionPaper | null;
   error: { code: string; message: string } | null;
-  start: (assignmentId: string, jobId: string) => void;
+  start: (assignmentId: string, jobId: string, title?: string) => void;
   applyProgress: (p: JobProgressPayload) => void;
   applyComplete: (p: JobCompletePayload) => void;
   applyFailed: (p: JobFailedPayload) => void;
@@ -28,6 +29,7 @@ interface GenerationState {
 const initial = {
   assignmentId: null,
   jobId: null,
+  title: null as string | null,
   percent: 0,
   step: null as GenerationStep | null,
   message: '',
@@ -38,11 +40,12 @@ const initial = {
 
 export const useGenerationStore = create<GenerationState>((set) => ({
   ...initial,
-  start: (assignmentId, jobId) =>
+  start: (assignmentId, jobId, title) =>
     set({
       ...initial,
       assignmentId,
       jobId,
+      title: title ?? null,
       status: 'subscribed',
       message: 'Connecting...',
     }),
