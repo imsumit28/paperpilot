@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Copy, Check } from 'lucide-react';
 import { Topbar } from '@/components/layout/Topbar';
 import { Card } from '@/components/ui/Card';
@@ -31,6 +31,13 @@ export default function RubricPage() {
   const [result, setResult] = useState('');
   const [genError, setGenError] = useState('');
   const [copied, setCopied] = useState(false);
+  const [slow, setSlow] = useState(false);
+
+  useEffect(() => {
+    if (!loading) { setSlow(false); return; }
+    const t = setTimeout(() => setSlow(true), 8000);
+    return () => clearTimeout(t);
+  }, [loading]);
 
   function validate() {
     const e: Record<string, string> = {};
@@ -131,6 +138,11 @@ Keep language clear and appropriate for ${grade} students.`;
             </div>
           </div>
           {genError && <p className="text-sm text-red-600">{genError}</p>}
+          {loading && slow && (
+            <p className="text-sm text-ink-muted">
+              Your rubric is being built — please hang on a few more seconds…
+            </p>
+          )}
           <Button loading={loading} onClick={handleGenerate} className="self-end">
             {loading ? 'Generating…' : 'Generate Rubric'}
           </Button>
