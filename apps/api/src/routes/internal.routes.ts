@@ -36,6 +36,11 @@ router.post('/progress', requireInternalSecret, (req: Request, res: Response): v
 
   const room = roomFor(payload.assignmentId);
   const io = getIO();
+  const roomSize = io.sockets.adapter.rooms.get(room)?.size ?? 0;
+  logger.info(
+    { kind: payload.kind, assignmentId: payload.assignmentId, room, roomSize },
+    'Relay: emitting to room',
+  );
 
   switch (payload.kind) {
     case 'progress':

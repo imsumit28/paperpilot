@@ -27,12 +27,16 @@ export function initSockets(httpServer: HttpServer): IOServer {
       SOCKET_EVENTS.SUBSCRIBE_JOB,
       async (payload: SubscribePayload, ack?: (ok: boolean) => void) => {
         if (!payload?.assignmentId) {
+          logger.warn({ id: socket.id }, 'SUBSCRIBE_JOB without assignmentId');
           ack?.(false);
           return;
         }
         const room = roomFor(payload.assignmentId);
         socket.join(room);
-        logger.debug({ id: socket.id, room }, 'socket joined room');
+        logger.info(
+          { id: socket.id, room, assignmentId: payload.assignmentId },
+          'SUBSCRIBE_JOB: socket joined room',
+        );
         ack?.(true);
 
         // Catch-up: if the job already completed before the client joined the
@@ -40,8 +44,23 @@ export function initSockets(httpServer: HttpServer): IOServer {
         // so the UI doesn't get stuck.
         try {
           const doc = await AssignmentModel.findById(payload.assignmentId).lean();
-          if (!doc) return;
+          if (!doc) {
+            logger.warn(
+              { assignmentId: payload.assignmentId },
+              'Catch-up: assignment not found in Mongo',
+            );
+            return;
+          }
+          logger.info(
+            {
+              assignmentId: payload.assignmentId,
+              status: doc.status,
+              hasPaper: Boolean(doc.paper),
+            },
+            'Catch-up: Mongo doc state',
+          );
           if (doc.status === 'completed' && doc.paper) {
+            logger.info({ assignmentId: payload.assignmentId }, 'Catch-up: emitting JOB_COMPLETE');
             socket.emit(SOCKET_EVENTS.JOB_COMPLETE, {
               assignmentId: String(doc._id),
               jobId: doc.jobId ?? '',
@@ -49,6 +68,7 @@ export function initSockets(httpServer: HttpServer): IOServer {
               at: Date.now(),
             });
           } else if (doc.status === 'failed') {
+            logger.info({ assignmentId: payload.assignmentId }, 'Catch-up: emitting JOB_FAILED');
             socket.emit(SOCKET_EVENTS.JOB_FAILED, {
               assignmentId: String(doc._id),
               jobId: doc.jobId ?? '',
