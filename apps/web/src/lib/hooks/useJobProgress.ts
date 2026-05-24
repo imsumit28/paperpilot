@@ -20,6 +20,9 @@ export function useJobProgress(assignmentId: string | null) {
     if (!assignmentId) return;
     const socket = getSocket();
 
+    // Re-emit SUBSCRIBE_JOB on every (re)connect. Server-side room membership
+    // is lost when the socket disconnects (e.g., API restart, network blip),
+    // so we must rejoin or progress events will silently drop.
     const subscribe = () => subscribeToJob(assignmentId);
 
     const onProgress = (p: JobProgressPayload) => {
@@ -32,12 +35,11 @@ export function useJobProgress(assignmentId: string | null) {
       if (p.assignmentId === assignmentId) applyFailed(p);
     };
 
-    if (socket.connected) subscribe();
-    else socket.on('connect', subscribe);
-
     socket.on(SOCKET_EVENTS.JOB_PROGRESS, onProgress);
     socket.on(SOCKET_EVENTS.JOB_COMPLETE, onComplete);
     socket.on(SOCKET_EVENTS.JOB_FAILED, onFailed);
+    socket.on('connect', subscribe);
+    if (socket.connected) subscribe();
 
     return () => {
       unsubscribeFromJob(assignmentId);
