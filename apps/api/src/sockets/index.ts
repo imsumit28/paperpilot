@@ -14,14 +14,17 @@ export function getIO(): IOServer {
 
 export function initSockets(httpServer: HttpServer): IOServer {
   io = new IOServer(httpServer, {
-    cors: { origin: env.CORS_ORIGIN, credentials: true },
+    cors: {
+      origin: env.CORS_ORIGIN.split(',').map((s) => s.trim()),
+      credentials: true,
+    },
     path: '/socket.io',
     pingInterval: 25_000,
     pingTimeout: 60_000,
   });
 
   io.on('connection', (socket: Socket) => {
-    logger.debug({ id: socket.id }, 'socket connected');
+    logger.info({ id: socket.id, origin: socket.handshake.headers.origin }, 'socket connected');
 
     socket.on(
       SOCKET_EVENTS.SUBSCRIBE_JOB,
