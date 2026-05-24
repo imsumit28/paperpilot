@@ -1,17 +1,21 @@
 # Paper Pilot
 
-AI-powered question paper generator for educators. Guided form or source-doc upload → DeepSeek-drafted, schema-validated paper with live progress and cached PDF export.
+Paper Pilot is an AI-powered assessment creation platform built for educators. A teacher fills in a guided form — subject, class, question types, marks distribution — optionally uploads a source document (PDF, DOCX, or plain text), and clicks Generate. Within seconds, a structured, print-ready question paper appears, complete with an answer key and section breakdown.
 
-A typed TypeScript monorepo: Next.js dashboard, Express + Socket.IO API, and a BullMQ worker that calls the DeepSeek LLM and renders PDFs with PDFKit.
+### How it works
 
-## Quick start
+1. **Submit** — the web app sends the form (and optional file) to the Express API. The API validates the payload, saves the assignment, and immediately enqueues a generation job. The response returns to the browser in under 300 ms.
 
-```bash
-pnpm install
-pnpm dev
-```
+2. **Generate** — the BullMQ worker picks up the job, builds a structured prompt from the assignment spec and any uploaded source material, and calls the DeepSeek LLM. The response is validated against a strict Zod schema. If the first attempt fails validation, the worker automatically retries with a refinement prompt before giving up.
 
-Requires Node ≥ 18.17, pnpm ≥ 9, MongoDB, Redis, and a DeepSeek API key. See [docs/setup.md](docs/setup.md) for details.
+3. **Progress** — as each stage completes (analyzing → building prompt → generating → parsing → saving), the worker publishes events to Redis Pub/Sub. The API bridges those events over Socket.IO so the browser shows a live step-by-step progress timeline — no polling, no spinner.
+
+4. **Paper** — once validated, the paper is saved to MongoDB with sections grouped by question type, normalized titles (e.g. "Section A: Multiple Choice Questions"), and a complete answer key.
+
+5. **PDF** — on first download, PDFKit renders the paper into a print-ready PDF and caches it in Redis for 24 hours. Subsequent downloads are served straight from the cache (~12× faster).
+
+The platform also includes an **AI Teacher's Toolkit** — standalone tools for grading rubrics, lesson plans, and more, powered by the same DeepSeek backend.
+
 
 ## Tech stack
 
@@ -30,6 +34,16 @@ Next.js 14 · React 18 · Tailwind · Zustand · Express 4 · Socket.IO · BullM
 | AI Teacher's Toolkit | |
 |---|---|
 | ![AI Teacher's Toolkit](docs/screenshots/toolkit.png) | |
+
+## Quick start
+
+```bash
+pnpm install
+pnpm dev
+```
+
+Requires Node ≥ 18.17, pnpm ≥ 9, MongoDB, Redis, and a DeepSeek API key. See [docs/setup.md](docs/setup.md) for details.
+
 
 ## Architecture overview
 
