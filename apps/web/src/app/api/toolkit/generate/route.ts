@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       {
         error:
-          'No AI key configured. Add DEEPSEEK_API_KEY (or GEMINI_API_KEY) to apps/web/.env and RESTART the dev server — Next.js only loads .env at startup.',
+          'AI provider not configured. Set DEEPSEEK_API_KEY (or GEMINI_API_KEY) in your hosting platform\'s environment variables (Vercel/Netlify/Render dashboard) and redeploy. For local dev, add it to apps/web/.env and restart `pnpm dev`.',
       },
       { status: 500 },
     );
