@@ -41,7 +41,7 @@ export function AssignmentCard({
       onClick={selectable ? () => onToggleSelect?.(assignment.id) : undefined}
       className={cn(
         'relative group w-full h-[116px] lg:h-[162px] rounded-[24px] border-0 shadow-none p-5 lg:p-6 bg-[rgba(255,255,255,0.75)] lg:bg-white backdrop-blur-[12px]',
-        menuOpen && 'z-30',
+        menuOpen && 'z-40',
         selectable && 'cursor-pointer',
         selected && 'ring-2 ring-[#FF5623] ring-offset-2 ring-offset-[#EDEDED]',
       )}
