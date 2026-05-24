@@ -1,5 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
+function readKey(name: string): string {
+  const raw = process.env[name];
+  if (!raw) return '';
+  return raw.trim().replace(/^['"]|['"]$/g, '');
+}
+
 async function callDeepSeek(key: string, prompt: string): Promise<string> {
   const res = await fetch('https://api.deepseek.com/chat/completions', {
     method: 'POST',
@@ -13,7 +22,7 @@ async function callDeepSeek(key: string, prompt: string): Promise<string> {
       max_tokens: 4096,
     }),
   });
-  if (!res.ok) throw new Error(await res.text());
+  if (!res.ok) throw new Error(`DeepSeek ${res.status}: ${await res.text()}`);
   const data = await res.json();
   return data.choices?.[0]?.message?.content ?? '';
 }
@@ -27,33 +36,47 @@ async function callGemini(key: string, prompt: string): Promise<string> {
       body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
     },
   );
-  if (!res.ok) throw new Error(await res.text());
+  if (!res.ok) throw new Error(`Gemini ${res.status}: ${await res.text()}`);
   const data = await res.json();
   return data.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
 }
 
 export async function POST(req: NextRequest) {
-  const { prompt } = (await req.json()) as { prompt: string };
+  const { prompt } = (await req.json()) as { prompt?: string };
   if (!prompt?.trim()) {
     return NextResponse.json({ error: 'Prompt is required.' }, { status: 400 });
   }
 
-  const deepseekKey = process.env.DEEPSEEK_API_KEY;
-  const geminiKey = process.env.GEMINI_API_KEY;
+  const deepseekKey = readKey('DEEPSEEK_API_KEY');
+  const geminiKey = readKey('GEMINI_API_KEY');
 
   if (!deepseekKey && !geminiKey) {
     return NextResponse.json(
-      { error: 'No AI key configured. Add DEEPSEEK_API_KEY or GEMINI_API_KEY to your .env file.' },
+      {
+        error:
+          'No AI key configured. Add DEEPSEEK_API_KEY (or GEMINI_API_KEY) to apps/web/.env and RESTART the dev server — Next.js only loads .env at startup.',
+      },
       { status: 500 },
     );
   }
 
-  try {
-    const text = deepseekKey
-      ? await callDeepSeek(deepseekKey, prompt)
-      : await callGemini(geminiKey!, prompt);
-    return NextResponse.json({ text });
-  } catch (err) {
-    return NextResponse.json({ error: String(err) }, { status: 500 });
+  const providers: Array<{ name: string; run: () => Promise<string> }> = [];
+  if (deepseekKey) providers.push({ name: 'DeepSeek', run: () => callDeepSeek(deepseekKey, prompt) });
+  if (geminiKey) providers.push({ name: 'Gemini', run: () => callGemini(geminiKey, prompt) });
+
+  const failures: string[] = [];
+  for (const provider of providers) {
+    try {
+      const text = await provider.run();
+      if (text?.trim()) return NextResponse.json({ text });
+      failures.push(`${provider.name}: empty response`);
+    } catch (err) {
+      failures.push(`${provider.name}: ${err instanceof Error ? err.message : String(err)}`);
+    }
   }
+
+  return NextResponse.json(
+    { error: `Generation failed. ${failures.join(' | ')}` },
+    { status: 502 },
+  );
 }

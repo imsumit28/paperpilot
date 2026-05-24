@@ -69,7 +69,7 @@ Instructions:
 Keep language clear and appropriate for ${grade} students.`;
       setResult(await generateToolkit(prompt));
     } catch (err) {
-      setGenError(err instanceof Error ? err.message : 'Generation failed. Make sure DEEPSEEK_API_KEY is set in your .env and the dev server has been restarted.');
+      setGenError(err instanceof Error ? err.message : 'Generation failed. Ensure DEEPSEEK_API_KEY is set in apps/web/.env and restart the dev server.');
     } finally {
       setLoading(false);
     }
