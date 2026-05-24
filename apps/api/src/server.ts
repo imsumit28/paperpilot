@@ -13,8 +13,9 @@ async function main() {
   const httpServer = createServer(app);
   initSockets(httpServer);
 
-  httpServer.listen(env.API_PORT, () => {
-    logger.info({ port: env.API_PORT, env: env.NODE_ENV }, 'API listening');
+  const port = Number(process.env.PORT) || env.API_PORT;
+  httpServer.listen(port, () => {
+    logger.info({ port, env: env.NODE_ENV }, 'API listening');
   });
 
   const shutdown = async (signal: string) => {
