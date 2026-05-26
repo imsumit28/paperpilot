@@ -1,5 +1,7 @@
 # Paper Pilot
 
+![Paper Pilot](docs/screenshots/banner.png)
+
 Paper Pilot is an AI-powered assessment creation platform built for educators. A teacher fills in a guided form — subject, class, question types, marks distribution — optionally uploads a source document (PDF, DOCX, or plain text), and clicks Generate. Within seconds, a structured, print-ready question paper appears, complete with an answer key and section breakdown.
 
 ### How it works
