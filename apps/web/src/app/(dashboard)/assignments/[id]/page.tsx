@@ -45,7 +45,8 @@ export default function AssignmentDetailPage() {
       setAssignment(dto);
       setFetchError(null);
       if (dto.status === 'pending' || dto.status === 'processing') {
-        if (useGenerationStore.getState().status === 'idle') {
+        const generation = useGenerationStore.getState();
+        if (generation.status === 'idle' || generation.assignmentId !== dto.id) {
           startGen(dto.id, dto.jobId ?? '', dto.title);
         }
       }
@@ -59,6 +60,18 @@ export default function AssignmentDetailPage() {
   useEffect(() => {
     refresh();
   }, [refresh]);
+
+  useEffect(() => {
+    if (!assignment) return;
+    if (assignment.paper) return;
+    if (assignment.status !== 'pending' && assignment.status !== 'processing') return;
+
+    const interval = window.setInterval(() => {
+      void refresh();
+    }, 2500);
+
+    return () => window.clearInterval(interval);
+  }, [assignment, refresh]);
 
   // When generation completes via socket, refetch the assignment from server
   useEffect(() => {
@@ -193,12 +206,12 @@ export default function AssignmentDetailPage() {
     );
   }
 
-  const showProgress =
-    assignment.status === 'pending' ||
-    assignment.status === 'processing' ||
-    (assignment.status === 'failed' && !assignment.paper);
-
   const paper = assignment.paper ?? generationPaper;
+  const showProgress =
+    !paper &&
+    (assignment.status === 'pending' ||
+      assignment.status === 'processing' ||
+      (assignment.status === 'failed' && !assignment.paper));
 
   return (
     <div className="px-4 lg:px-0 pb-24 lg:pb-12">

@@ -11,7 +11,7 @@ const bricolage = Bricolage_Grotesque({
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
 
 export const metadata: Metadata = {
-  title: 'VedaAI · Paper Pilot',
+  title: 'Paper Pilot',
   description: 'AI-powered assessment creator for teachers',
 };
 

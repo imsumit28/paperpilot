@@ -7,12 +7,14 @@ import { SOCKET_EVENTS } from '@paper-pilot/shared';
 // without the first to unsubscribe kicking everyone else out.
 const refCounts = new Map<string, number>();
 
+export function emitJobSubscription(assignmentId: string): void {
+  getSocket().emit(SOCKET_EVENTS.SUBSCRIBE_JOB, { assignmentId });
+}
+
 export function subscribeToJob(assignmentId: string): void {
   const n = refCounts.get(assignmentId) ?? 0;
   refCounts.set(assignmentId, n + 1);
-  if (n === 0) {
-    getSocket().emit(SOCKET_EVENTS.SUBSCRIBE_JOB, { assignmentId });
-  }
+  emitJobSubscription(assignmentId);
 }
 
 export function unsubscribeFromJob(assignmentId: string): void {

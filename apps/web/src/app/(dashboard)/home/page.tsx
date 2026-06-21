@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import {
+  ArrowDownRight,
   ArrowRight,
   ArrowUpRight,
   BookOpen,
@@ -10,10 +11,12 @@ import {
   ClipboardList,
   FileText,
   LayoutList,
+  Minus,
   Plus,
   Sparkles,
   Users,
 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import type { AssignmentDto } from '@paper-pilot/shared';
 import { Topbar } from '@/components/layout/Topbar';
 import { StatusBadge } from '@/components/ui/Badge';
@@ -69,6 +72,43 @@ export default function HomePage() {
     return { ready, working };
   }, [items]);
 
+  // Lightweight analytics derived from the loaded assignments: creation
+  // cadence (sparkline), this-week vs last-week delta, and status ratios.
+  const analytics = useMemo(() => {
+    const DAY = 86_400_000;
+    const now = Date.now();
+    let thisWeek = 0;
+    let prevWeek = 0;
+    for (const a of items) {
+      const t = new Date(a.createdAt).getTime();
+      if (t >= now - 7 * DAY) thisWeek += 1;
+      else if (t >= now - 14 * DAY) prevWeek += 1;
+    }
+    const sorted = [...items].sort(
+      (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+    );
+    let spark: number[] = [];
+    if (sorted.length >= 2) {
+      const min = new Date(sorted[0].createdAt).getTime();
+      const max = new Date(sorted[sorted.length - 1].createdAt).getTime();
+      const span = Math.max(1, max - min);
+      const N = 7;
+      const buckets = new Array<number>(N).fill(0);
+      for (const a of sorted) {
+        const f = (new Date(a.createdAt).getTime() - min) / span;
+        buckets[Math.min(N - 1, Math.floor(f * N))] += 1;
+      }
+      spark = buckets;
+    }
+    const loaded = Math.max(items.length, 1);
+    return {
+      spark,
+      weekDelta: thisWeek - prevWeek,
+      readyPct: Math.round((stats.ready / loaded) * 100),
+      workingPct: Math.round((stats.working / loaded) * 100),
+    };
+  }, [items, stats]);
+
   const recent = useMemo(
     () =>
       [...items]
@@ -123,10 +163,38 @@ export default function HomePage() {
 
       {/* Stats strip */}
       <div className="mt-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <StatCard label="Total assignments" value={total} dot="bg-ink" loading={loading} />
-        <StatCard label="Ready" value={stats.ready} dot="bg-status-ready" loading={loading} />
-        <StatCard label="Generating" value={stats.working} dot="bg-status-processing" loading={loading} />
-        <StatCard label="Saved papers" value={savedCount} dot="bg-accent-500" loading={false} />
+        <StatCard
+          label="Total assignments"
+          value={total}
+          loading={loading}
+          tone={{ dot: 'bg-brand-600', bar: 'bg-brand-600', accent: 'text-brand-600' }}
+          trend={analytics.weekDelta}
+          spark={analytics.spark}
+        />
+        <StatCard
+          label="Ready"
+          value={stats.ready}
+          loading={loading}
+          tone={{ dot: 'bg-status-ready', bar: 'bg-status-ready', accent: 'text-status-ready' }}
+          progress={analytics.readyPct}
+          progressLabel={`${analytics.readyPct}% of recent`}
+        />
+        <StatCard
+          label="Generating"
+          value={stats.working}
+          loading={loading}
+          pulse
+          tone={{ dot: 'bg-status-processing', bar: 'bg-status-processing', accent: 'text-status-processing' }}
+          progress={analytics.workingPct}
+          progressLabel={stats.working > 0 ? 'Active now' : 'All caught up'}
+        />
+        <StatCard
+          label="Saved papers"
+          value={savedCount}
+          loading={false}
+          tone={{ dot: 'bg-accent-500', bar: 'bg-accent-500', accent: 'text-accent-600' }}
+          hint={savedCount > 0 ? 'Bookmarked' : 'None saved yet'}
+        />
       </div>
 
       {/* Two-column: recent + tools */}
@@ -209,31 +277,149 @@ export default function HomePage() {
   );
 }
 
+interface StatTone {
+  dot: string;
+  bar: string;
+  accent: string;
+}
+
 function StatCard({
   label,
   value,
-  dot,
   loading,
+  tone,
+  trend,
+  spark,
+  progress,
+  progressLabel,
+  hint,
+  pulse,
 }: {
   label: string;
   value: number;
-  dot: string;
   loading: boolean;
+  tone: StatTone;
+  trend?: number;
+  spark?: number[];
+  progress?: number;
+  progressLabel?: string;
+  hint?: string;
+  pulse?: boolean;
 }) {
+  const active = value > 0;
   return (
-    <div className="rounded-2xl border border-border bg-surface px-4 py-4">
-      <div className="flex items-center gap-1.5">
-        <span className={`h-1.5 w-1.5 rounded-full ${dot}`} />
-        <span className="text-[12px] font-medium text-ink-muted">{label}</span>
+    <div className="flex flex-col gap-2 rounded-2xl border border-border bg-surface px-4 py-4">
+      <div className="flex items-center justify-between gap-2">
+        <span className="flex min-w-0 items-center gap-1.5">
+          <span
+            className={cn(
+              'h-1.5 w-1.5 shrink-0 rounded-full',
+              active ? tone.dot : 'bg-border-strong',
+              active && pulse && 'animate-pulse',
+            )}
+          />
+          <span className="truncate text-[12px] font-medium text-ink-muted">{label}</span>
+        </span>
+        {trend !== undefined && !loading && <TrendPill delta={trend} />}
       </div>
+
       {loading ? (
-        <div className="mt-2 h-8 w-12 animate-pulse rounded-md bg-surface-alt" />
+        <div className="h-[30px] w-12 animate-pulse rounded-md bg-surface-alt" />
       ) : (
-        <div className="mt-1 text-[30px] font-bold leading-none tracking-[-0.02em] text-ink tabular-nums">
+        <div
+          className={cn(
+            'text-[30px] font-bold leading-none tracking-[-0.02em] tabular-nums',
+            active ? 'text-ink' : 'text-ink-subtle',
+          )}
+        >
           {value}
         </div>
       )}
+
+      {!loading && (
+        <div className="flex h-7 items-end">
+          {spark && spark.length >= 2 ? (
+            <Sparkline
+              data={spark}
+              className={cn('h-7 w-full', active ? tone.accent : 'text-border-strong')}
+            />
+          ) : progress !== undefined ? (
+            <div className="w-full">
+              <div className="h-1.5 w-full overflow-hidden rounded-full bg-surface-alt">
+                <div
+                  className={cn('h-full rounded-full transition-all', active ? tone.bar : 'bg-border-strong')}
+                  style={{ width: `${active ? Math.max(6, Math.min(100, progress)) : 0}%` }}
+                />
+              </div>
+              <div className={cn('mt-1.5 text-[11px] font-medium', active ? tone.accent : 'text-ink-subtle')}>
+                {progressLabel}
+              </div>
+            </div>
+          ) : hint ? (
+            <span className={cn('text-[11px] font-medium', active ? tone.accent : 'text-ink-subtle')}>
+              {hint}
+            </span>
+          ) : null}
+        </div>
+      )}
     </div>
+  );
+}
+
+function TrendPill({ delta }: { delta: number }) {
+  if (delta > 0) {
+    return (
+      <span
+        title="vs last week"
+        className="inline-flex shrink-0 items-center gap-0.5 rounded-full bg-status-ready-bg px-1.5 py-0.5 text-[10px] font-semibold text-status-ready"
+      >
+        <ArrowUpRight className="h-3 w-3" />+{delta} wk
+      </span>
+    );
+  }
+  if (delta < 0) {
+    return (
+      <span
+        title="vs last week"
+        className="inline-flex shrink-0 items-center gap-0.5 rounded-full bg-status-failed-bg px-1.5 py-0.5 text-[10px] font-semibold text-status-failed"
+      >
+        <ArrowDownRight className="h-3 w-3" />
+        {delta} wk
+      </span>
+    );
+  }
+  return (
+    <span
+      title="vs last week"
+      className="inline-flex shrink-0 items-center gap-0.5 rounded-full bg-surface-alt px-1.5 py-0.5 text-[10px] font-semibold text-ink-subtle"
+    >
+      <Minus className="h-3 w-3" />0 wk
+    </span>
+  );
+}
+
+function Sparkline({ data, className }: { data: number[]; className?: string }) {
+  const W = 100;
+  const H = 28;
+  const max = Math.max(1, ...data);
+  const step = data.length > 1 ? W / (data.length - 1) : W;
+  const pts = data.map((v, i) => [i * step, H - (v / max) * (H - 4) - 2] as const);
+  const line = pts.map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(1)} ${y.toFixed(1)}`).join(' ');
+  const area = `${line} L ${W} ${H} L 0 ${H} Z`;
+  const last = pts[pts.length - 1];
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className={className} aria-hidden>
+      <path d={area} className="fill-current opacity-[0.12]" />
+      <path
+        d={line}
+        className="fill-none stroke-current"
+        strokeWidth={2}
+        strokeLinejoin="round"
+        strokeLinecap="round"
+        vectorEffect="non-scaling-stroke"
+      />
+      <circle cx={last[0]} cy={last[1]} r={2.5} className="fill-current" vectorEffect="non-scaling-stroke" />
+    </svg>
   );
 }
 

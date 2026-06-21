@@ -207,18 +207,27 @@ export default function AssignmentsPage() {
       <Topbar title="Assignments" />
       <AssignmentsStrip onBack={() => router.back()} />
 
-      <div className="hidden lg:block mb-3 px-2">
-        <div className="flex items-center gap-2">
-          <span className="h-3 w-3 rounded-full bg-brand-500 border-4 border-brand-200" />
-          <h1 className="text-[20px] leading-[140%] tracking-[-0.02em] font-bold text-ink">Assignments</h1>
+      <div className="hidden lg:flex items-end justify-between gap-4 mb-5 px-2">
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-subtle">
+            Your assessments
+          </p>
+          <h1 className="mt-0.5 text-[28px] leading-tight tracking-[-0.02em] font-bold text-ink">
+            Assignments
+          </h1>
+          <p className="text-[14px] leading-[140%] tracking-[-0.01em] text-ink-muted mt-1">
+            Manage, generate, and grade papers for your classes.
+          </p>
         </div>
-        <p className="text-[14px] leading-[140%] tracking-[-0.02em] text-ink-subtle mt-0.5">
-          Manage and create assignments for your classes.
-        </p>
+        <Link href="/assignments/new">
+          <Button iconLeft={<Plus className="h-4 w-4" />} className="h-11 px-5">
+            Create Assignment
+          </Button>
+        </Link>
       </div>
 
       {error && (
-        <div className="mb-4 rounded-2xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
+        <div className="mb-4 rounded-2xl bg-status-failed-bg border border-rose-200 px-4 py-3 text-sm text-rose-700">
           {error}
         </div>
       )}
@@ -266,13 +275,6 @@ export default function AssignmentsPage() {
         )}
       </div>
 
-      <div className="hidden lg:flex sticky bottom-3 justify-center pointer-events-none">
-        <Link href="/assignments/new" className="pointer-events-auto">
-          <Button iconLeft={<Plus className="h-4 w-4" />} className="shadow-lg bg-ink hover:bg-black text-white px-6 h-8 text-sm">
-            Create Assignment
-          </Button>
-        </Link>
-      </div>
       <BottomBlurFade />
       <MobileFab />
     </div>

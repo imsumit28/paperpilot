@@ -39,7 +39,7 @@ html, body {
   content: '';
   position: absolute;
   inset: -2px;
-  background: linear-gradient(120deg, #0E8A72, #34BCA0, #FF9D7E, #F0653E, #0E8A72);
+  background: linear-gradient(120deg, #2456E0, #5E8AF9, #FF9D7E, #F0653E, #2456E0);
   background-size: 300% 300%;
   border-radius: 9999px;
   z-index: -1;

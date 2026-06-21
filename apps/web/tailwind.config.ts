@@ -5,19 +5,20 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Scholar Teal — structural primary (nav, links, primary actions, focus)
+        // Pilot Blue — structural primary, matched to the Paper Pilot logo
+        // (navy → bright blue). Nav, links, primary actions, focus.
         brand: {
-          DEFAULT: '#0E8A72',
-          50: '#ECFDF7',
-          100: '#D2F4EA',
-          200: '#A7E8D6',
-          300: '#6FD6BE',
-          400: '#34BCA0',
-          500: '#14A085',
-          600: '#0E8A72',
-          700: '#0B6F5C',
-          800: '#0A5849',
-          900: '#08453A',
+          DEFAULT: '#2456E0',
+          50: '#EFF4FF',
+          100: '#DCE7FE',
+          200: '#BFD2FE',
+          300: '#93B2FD',
+          400: '#5E8AF9',
+          500: '#3A6BF0',
+          600: '#2456E0',
+          700: '#1D44B5',
+          800: '#1B388F',
+          900: '#172B66',
         },
         // Aurora — warm "AI energy" accent, used sparingly for Create/Generate/Toolkit
         accent: {
@@ -51,8 +52,8 @@ const config: Config = {
         status: {
           pending: '#D97706',
           'pending-bg': '#FEF3C7',
-          processing: '#0E8A72',
-          'processing-bg': '#D2F4EA',
+          processing: '#2456E0',
+          'processing-bg': '#DCE7FE',
           ready: '#059669',
           'ready-bg': '#D1FAE5',
           failed: '#E11D48',
@@ -77,7 +78,7 @@ const config: Config = {
         raised: '0 12px 32px rgba(20,22,30,0.12)',
         float: '0 12px 32px rgba(20,22,30,0.10), 0 24px 40px rgba(20,22,30,0.10)',
         sidebar: '0 4px 24px rgba(20,22,30,0.06)',
-        'brand-glow': '0 0 0 4px rgba(14,138,114,0.12)',
+        'brand-glow': '0 0 0 4px rgba(36,86,224,0.12)',
       },
       borderRadius: {
         lg: '0.75rem', // 12px — controls

@@ -28,6 +28,15 @@ export default function SettingsPage() {
     <div className="px-4 lg:px-0 pb-24 lg:pb-12">
       <Topbar title="Settings" />
 
+      <div className="mb-5 px-1 lg:px-2">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-subtle">
+          Profile &amp; preferences
+        </p>
+        <h1 className="mt-0.5 text-[28px] leading-tight tracking-[-0.02em] font-bold text-ink">
+          Settings
+        </h1>
+      </div>
+
       <div className="flex flex-col gap-4">
         <ProfileSection
           initial={{ teacherName, schoolName, schoolAddress }}

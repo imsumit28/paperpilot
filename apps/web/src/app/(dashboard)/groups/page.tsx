@@ -23,17 +23,24 @@ export default function GroupsPage() {
   const { groups, deleteGroup } = useGroupsStore();
 
   return (
-    <div className="px-4 lg:px-0">
+    <div className="px-4 lg:px-0 pb-24 lg:pb-12">
       <Topbar title="My Groups" />
 
-      <div className="flex items-center justify-between mb-4">
-        <p className="text-sm text-ink-muted">
-          {groups.length === 0 ? 'No groups yet' : `${groups.length} group${groups.length !== 1 ? 's' : ''}`}
-        </p>
-        <Button
-          iconLeft={<Plus className="h-4 w-4" />}
-          onClick={() => setModalOpen(true)}
-        >
+      <div className="flex items-end justify-between gap-4 mb-5 px-1 lg:px-2">
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-subtle">
+            Class organisation
+          </p>
+          <h1 className="mt-0.5 text-[28px] leading-tight tracking-[-0.02em] font-bold text-ink">
+            My Groups
+          </h1>
+          <p className="mt-1 text-[14px] tracking-[-0.01em] text-ink-muted">
+            {groups.length === 0
+              ? 'Group papers by class, subject, and exam type.'
+              : `${groups.length} group${groups.length !== 1 ? 's' : ''}.`}
+          </p>
+        </div>
+        <Button iconLeft={<Plus className="h-4 w-4" />} onClick={() => setModalOpen(true)} className="shrink-0">
           Create Group
         </Button>
       </div>

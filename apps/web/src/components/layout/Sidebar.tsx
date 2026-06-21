@@ -15,7 +15,7 @@ import {
   X,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { VedaLogo } from './VedaLogo';
+import { BrandLogo } from './BrandLogo';
 import { UserAvatar } from './UserAvatar';
 import { useUIStore, type ToolkitOption } from '@/store/useUIStore';
 import { useAuthStore } from '@/store/useAuthStore';
@@ -218,7 +218,10 @@ export function Sidebar({ assignmentCount }: { assignmentCount?: number } = {}) 
         )}
       >
         <div className="flex items-center justify-between mb-8">
-          <VedaLogo />
+          <span className="flex items-center gap-2">
+            <BrandLogo variant="mark" className="h-9 w-9 object-contain" />
+            <span className="text-[20px] font-extrabold tracking-[-0.03em] text-ink">Paper Pilot</span>
+          </span>
           <button
             type="button"
             className="lg:hidden h-8 w-8 flex items-center justify-center rounded-full hover:bg-surface-alt"

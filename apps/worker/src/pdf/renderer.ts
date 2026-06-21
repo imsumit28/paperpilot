@@ -2,10 +2,10 @@ import PDFDocument from 'pdfkit';
 import type { Difficulty, QuestionPaper } from '@paper-pilot/shared';
 
 const COLORS = {
-  text: '#111111',
-  muted: '#6B7280',
-  border: '#E5E7EB',
-  brand: '#E8520A',
+  text: '#15161B',
+  muted: '#5B6072',
+  border: '#E6E7EE',
+  brand: '#2456E0', // Pilot Blue — matches the app/logo
   easy: '#15803D',
   moderate: '#B45309',
   hard: '#B91C1C',

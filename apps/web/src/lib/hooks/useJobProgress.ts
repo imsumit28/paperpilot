@@ -8,7 +8,7 @@ import {
   type JobProgressPayload,
 } from '@paper-pilot/shared';
 import { getSocket } from '../socket';
-import { subscribeToJob, unsubscribeFromJob } from '../jobSubscriptions';
+import { emitJobSubscription, subscribeToJob, unsubscribeFromJob } from '../jobSubscriptions';
 import { useGenerationStore } from '@/store/useGenerationStore';
 
 export function useJobProgress(assignmentId: string | null) {
@@ -23,7 +23,7 @@ export function useJobProgress(assignmentId: string | null) {
     // Re-emit SUBSCRIBE_JOB on every (re)connect. Server-side room membership
     // is lost when the socket disconnects (e.g., API restart, network blip),
     // so we must rejoin or progress events will silently drop.
-    const subscribe = () => subscribeToJob(assignmentId);
+    const rejoin = () => emitJobSubscription(assignmentId);
 
     const onProgress = (p: JobProgressPayload) => {
       if (p.assignmentId === assignmentId) applyProgress(p);
@@ -38,12 +38,12 @@ export function useJobProgress(assignmentId: string | null) {
     socket.on(SOCKET_EVENTS.JOB_PROGRESS, onProgress);
     socket.on(SOCKET_EVENTS.JOB_COMPLETE, onComplete);
     socket.on(SOCKET_EVENTS.JOB_FAILED, onFailed);
-    socket.on('connect', subscribe);
-    if (socket.connected) subscribe();
+    socket.on('connect', rejoin);
+    subscribeToJob(assignmentId);
 
     return () => {
       unsubscribeFromJob(assignmentId);
-      socket.off('connect', subscribe);
+      socket.off('connect', rejoin);
       socket.off(SOCKET_EVENTS.JOB_PROGRESS, onProgress);
       socket.off(SOCKET_EVENTS.JOB_COMPLETE, onComplete);
       socket.off(SOCKET_EVENTS.JOB_FAILED, onFailed);

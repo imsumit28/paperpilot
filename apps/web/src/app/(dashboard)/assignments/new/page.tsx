@@ -140,7 +140,7 @@ export default function NewAssignmentPage() {
           <div className="self-start flex w-full items-start gap-2.5 lg:max-w-[820px] lg:ml-3">
             <div className="relative flex min-h-[50px] flex-1 flex-col justify-center gap-1 pl-7">
               <h1 className="text-[16px] font-bold leading-[1.2] tracking-[-0.02em] text-ink lg:text-[38px]">Create Assignment</h1>
-              <span className="absolute left-0 top-1/2 h-[10px] w-[10px] -translate-y-1/2 rounded-full bg-brand-500 shadow-[0_0_0_3px_rgba(14,138,114,0.20)]" />
+              <span className="absolute left-0 top-1/2 h-[10px] w-[10px] -translate-y-1/2 rounded-full bg-brand-500 shadow-[0_0_0_3px_rgba(36,86,224,0.20)]" />
               <p className="text-[14px] leading-[1.25] tracking-[-0.03em] text-ink-subtle lg:text-[16px]">Set up a new assignment for your students</p>
             </div>
           </div>

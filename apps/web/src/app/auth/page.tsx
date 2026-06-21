@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
 import { Input, Label } from '@/components/ui/Input';
 import { DEFAULT_SCHOOL_LOGO, useAuthStore } from '@/store/useAuthStore';
-import { VedaLogo } from '@/components/layout/VedaLogo';
+import { BrandLogo } from '@/components/layout/BrandLogo';
 import { UserAvatar } from '@/components/layout/UserAvatar';
 
 export default function AuthPage() {
@@ -76,7 +76,9 @@ function AuthPageContent() {
           <div className="pointer-events-none absolute -left-20 -top-24 h-[260px] w-[260px] rounded-full bg-brand-400/25 blur-3xl" />
           <div className="pointer-events-none absolute -bottom-20 -right-20 h-[260px] w-[260px] rounded-full bg-[#FFFFFF]/10 blur-3xl" />
           <div className="relative z-10">
-            <VedaLogo variant="light" />
+            <span className="inline-flex rounded-2xl bg-white p-3 shadow-sm">
+              <BrandLogo variant="full" className="h-20 w-auto object-contain" />
+            </span>
             <p className="mt-8 inline-flex rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-semibold tracking-[0.08em] text-white/90">
               AI ASSESSMENT CREATOR
             </p>
