@@ -5,32 +5,58 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // Scholar Teal — structural primary (nav, links, primary actions, focus)
         brand: {
-          DEFAULT: '#E8520A',
-          50: '#FFF2EA',
-          100: '#FFE0CC',
-          200: '#FFC199',
-          300: '#FFA266',
-          400: '#FF8333',
-          500: '#E8520A',
-          600: '#C04408',
-          700: '#993606',
-          800: '#722904',
-          900: '#4B1B03',
+          DEFAULT: '#0E8A72',
+          50: '#ECFDF7',
+          100: '#D2F4EA',
+          200: '#A7E8D6',
+          300: '#6FD6BE',
+          400: '#34BCA0',
+          500: '#14A085',
+          600: '#0E8A72',
+          700: '#0B6F5C',
+          800: '#0A5849',
+          900: '#08453A',
+        },
+        // Aurora — warm "AI energy" accent, used sparingly for Create/Generate/Toolkit
+        accent: {
+          DEFAULT: '#F0653E',
+          50: '#FFF3EE',
+          100: '#FFE2D6',
+          200: '#FFC2AC',
+          300: '#FF9D7E',
+          400: '#F87B53',
+          500: '#F0653E',
+          600: '#D84E29',
+          700: '#B23C1F',
+          800: '#8A2F19',
+          900: '#5E2011',
         },
         ink: {
-          DEFAULT: '#111111',
-          muted: '#6B7280',
-          subtle: '#9CA3AF',
+          DEFAULT: '#15161B',
+          muted: '#5B6072',
+          subtle: '#9499AB',
         },
         surface: {
           DEFAULT: '#FFFFFF',
-          alt: '#F5F5F5',
-          page: '#EDEDED',
+          alt: '#F7F7FB',
+          page: '#F4F4F7',
         },
         border: {
-          DEFAULT: '#E5E7EB',
-          strong: '#D1D5DB',
+          DEFAULT: '#E6E7EE',
+          strong: '#D2D4DF',
+        },
+        // Assignment status — processing ties to brand so "AI working" reads on-brand
+        status: {
+          pending: '#D97706',
+          'pending-bg': '#FEF3C7',
+          processing: '#0E8A72',
+          'processing-bg': '#D2F4EA',
+          ready: '#059669',
+          'ready-bg': '#D1FAE5',
+          failed: '#E11D48',
+          'failed-bg': '#FFE4E6',
         },
         difficulty: {
           easy: '#15803D',
@@ -46,11 +72,18 @@ const config: Config = {
         inter: ['var(--font-inter)', 'ui-sans-serif', 'system-ui'],
       },
       boxShadow: {
-        card: '0 1px 2px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.03)',
-        sidebar: '0 4px 24px rgba(0,0,0,0.04)',
-        'brand-glow': '0 0 0 4px rgba(232,82,10,0.10)',
+        // Layered elevation: border separates, shadow lifts
+        card: '0 1px 2px rgba(20,22,30,0.04), 0 1px 1px rgba(20,22,30,0.03)',
+        raised: '0 12px 32px rgba(20,22,30,0.12)',
+        float: '0 12px 32px rgba(20,22,30,0.10), 0 24px 40px rgba(20,22,30,0.10)',
+        sidebar: '0 4px 24px rgba(20,22,30,0.06)',
+        'brand-glow': '0 0 0 4px rgba(14,138,114,0.12)',
       },
       borderRadius: {
+        lg: '0.75rem', // 12px — controls
+        xl: '1rem', // 16px
+        '2xl': '1.25rem', // 20px — cards
+        '3xl': '1.75rem', // 28px — shell panels
         '4xl': '2rem',
       },
       keyframes: {

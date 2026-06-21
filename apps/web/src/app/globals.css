@@ -8,11 +8,12 @@ html {
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  .brand-glow::before { animation: none !important; }
 }
 
 html, body {
-  background: #EDEDED;
-  color: #111111;
+  background: #F4F4F7;
+  color: #15161B;
   font-family: var(--font-sans), 'Bricolage Grotesque', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -21,14 +22,15 @@ html, body {
 
 * { box-sizing: border-box; }
 
-/* Inner highlight shadow for Create Assignment dark pill */
+/* Inner highlight shadow for the dark Create / Toolkit pill */
 .create-assignment-shadow {
   box-shadow:
-    inset 0px -1px 3.5px rgba(177, 177, 177, 0.6),
-    inset 0px 0px 34.5px rgba(255, 255, 255, 0.25);
+    inset 0px -1px 3.5px rgba(0, 0, 0, 0.35),
+    inset 0px 0px 34.5px rgba(255, 255, 255, 0.16);
 }
 
-/* Animated AI gradient border for "Create Assignment" button */
+/* Animated AI gradient border for "Create Assignment" / Toolkit button.
+   Teal → mint → aurora coral so the brand leads and the accent sparks. */
 .brand-glow {
   position: relative;
   isolation: isolate;
@@ -37,7 +39,7 @@ html, body {
   content: '';
   position: absolute;
   inset: -2px;
-  background: linear-gradient(120deg, #E8520A, #FF8333, #FFC199, #E8520A);
+  background: linear-gradient(120deg, #0E8A72, #34BCA0, #FF9D7E, #F0653E, #0E8A72);
   background-size: 300% 300%;
   border-radius: 9999px;
   z-index: -1;
@@ -50,15 +52,15 @@ html, body {
 
 /* Custom scrollbar */
 ::-webkit-scrollbar { width: 8px; height: 8px; }
-::-webkit-scrollbar-thumb { background: #D1D5DB; border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: #9CA3AF; }
+::-webkit-scrollbar-thumb { background: #D2D4DF; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #9499AB; }
 ::-webkit-scrollbar-track { background: transparent; }
 
-/* Bottom nav shadow */
+/* Bottom nav shadow — softened ~30% for a premium, less dramatic float */
 .bottom-nav-shadow {
   box-shadow:
-    0px 32px 48px rgba(0, 0, 0, 0.2),
-    0px 16px 48px rgba(0, 0, 0, 0.12);
+    0px 24px 40px rgba(20, 22, 30, 0.18),
+    0px 12px 32px rgba(20, 22, 30, 0.10);
 }
 
 /* iOS-style fading backdrop blur above mobile bottom nav */

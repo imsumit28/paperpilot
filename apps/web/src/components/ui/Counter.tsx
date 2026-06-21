@@ -27,17 +27,17 @@ export function Counter({ value, onChange, min = 1, max = 50, className, ariaLab
         type="button"
         onClick={dec}
         disabled={value <= min}
-        className="h-7 w-7 rounded-full hover:bg-surface-alt disabled:opacity-30 flex items-center justify-center"
+        className="h-7 w-7 rounded-full text-ink-muted hover:bg-brand-50 hover:text-brand-700 disabled:opacity-30 disabled:hover:bg-transparent flex items-center justify-center transition-colors"
         aria-label="Decrement"
       >
         <Minus className="h-3.5 w-3.5" />
       </button>
-      <span className="min-w-[24px] text-center font-semibold tabular-nums">{value}</span>
+      <span className="min-w-[24px] text-center font-semibold tabular-nums text-ink">{value}</span>
       <button
         type="button"
         onClick={inc}
         disabled={value >= max}
-        className="h-7 w-7 rounded-full hover:bg-surface-alt disabled:opacity-30 flex items-center justify-center"
+        className="h-7 w-7 rounded-full text-ink-muted hover:bg-brand-50 hover:text-brand-700 disabled:opacity-30 disabled:hover:bg-transparent flex items-center justify-center transition-colors"
         aria-label="Increment"
       >
         <Plus className="h-3.5 w-3.5" />

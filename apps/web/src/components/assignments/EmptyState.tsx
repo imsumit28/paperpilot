@@ -21,10 +21,10 @@ export function EmptyState() {
 
         {/* Text block */}
         <div className="flex flex-col items-center gap-0.5 w-full">
-          <h2 className="text-[20px] font-bold tracking-[-0.04em] leading-[1.4] text-[#303030] text-center">
+          <h2 className="text-[20px] font-bold tracking-[-0.02em] leading-[1.4] text-ink text-center">
             No assignments yet
           </h2>
-          <p className="text-[16px] font-normal tracking-[-0.04em] leading-[1.4] text-[rgba(94,94,94,0.8)] text-center w-full">
+          <p className="text-[16px] font-normal tracking-[-0.02em] leading-[1.4] text-ink-muted text-center w-full">
             Create your first assignment to start collecting and grading student submissions. You can set up rubrics, define marking criteria, and let AI assist with grading.
           </p>
         </div>
@@ -33,7 +33,7 @@ export function EmptyState() {
       {/* Button */}
       <Link
         href="/assignments/new"
-        className="inline-flex items-center justify-center gap-1 w-[277px] h-[46px] px-6 rounded-[48px] bg-[#181818] text-white text-[16px] font-medium tracking-[-0.04em] hover:bg-black active:scale-[0.98] transition-all"
+        className="inline-flex items-center justify-center gap-1 w-[277px] h-[46px] px-6 rounded-[48px] bg-ink text-white text-[16px] font-medium tracking-[-0.02em] hover:bg-black active:scale-[0.98] transition-all"
       >
         <Plus className="h-5 w-5 shrink-0" />
         Create Your First Assignment

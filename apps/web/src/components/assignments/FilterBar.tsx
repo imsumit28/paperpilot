@@ -62,29 +62,29 @@ export function FilterBar({ query, onQueryChange, value, onValueChange }: Props)
     value.status === DEFAULT_FILTER_VALUE.status && value.sort === DEFAULT_FILTER_VALUE.sort;
 
   return (
-    <div className="flex h-[64px] w-full items-center justify-between gap-[36px] rounded-[16px] bg-white px-4 lg:h-12 lg:px-4 lg:bg-white lg:rounded-[12px] lg:border lg:border-black/10">
+    <div className="flex h-[64px] w-full items-center justify-between gap-[36px] rounded-[16px] bg-white px-4 lg:h-12 lg:px-4 lg:bg-white lg:rounded-[12px] lg:border lg:border-border">
       <div ref={wrapperRef} className="relative">
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
           aria-haspopup="true"
           className={cn(
-            'inline-flex h-5 items-center gap-1 rounded-full border-0 bg-transparent p-0 text-[14px] font-normal leading-[140%] tracking-[-0.04em] lg:h-8 lg:gap-2 lg:text-sm lg:font-bold',
-            isDefault ? 'text-[#A9A9A9]' : 'text-[#303030]',
+            'inline-flex h-5 items-center gap-1 rounded-full border-0 bg-transparent p-0 text-[14px] font-normal leading-[140%] tracking-[-0.02em] lg:h-8 lg:gap-2 lg:text-sm lg:font-bold',
+            isDefault ? 'text-ink-subtle' : 'text-ink',
           )}
         >
           <Filter className="h-4 w-4 shrink-0" />
           <span>Filter</span>
           {!isDefault && (
-            <span className="ml-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-[#FF5623] px-1 text-[10px] font-semibold text-white">
+            <span className="ml-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-accent-500 px-1 text-[10px] font-semibold text-white">
               •
             </span>
           )}
         </button>
 
         {open && (
-          <div className="absolute left-0 top-9 z-30 w-[240px] rounded-2xl border border-black/10 bg-white p-3 shadow-[0px_16px_48px_rgba(0,0,0,0.18)] lg:top-10">
-            <div className="mb-2 px-1 text-[11px] font-semibold uppercase tracking-wider text-[#8A8A8A]">
+          <div className="absolute left-0 top-9 z-30 w-[240px] rounded-2xl border border-border bg-white p-3 shadow-raised lg:top-10">
+            <div className="mb-2 px-1 text-[11px] font-semibold uppercase tracking-wider text-ink-subtle">
               Status
             </div>
             <div className="flex flex-col gap-1">
@@ -97,17 +97,17 @@ export function FilterBar({ query, onQueryChange, value, onValueChange }: Props)
                     onClick={() => onValueChange({ ...value, status: opt.value })}
                     className={cn(
                       'flex items-center justify-between rounded-lg px-2 py-1.5 text-left text-[13px] font-medium tracking-[-0.02em]',
-                      active ? 'bg-[#F0F0F0] text-[#303030]' : 'text-[#5E5E5E] hover:bg-[#F6F6F6]',
+                      active ? 'bg-surface-alt text-ink' : 'text-ink-muted hover:bg-surface-alt',
                     )}
                   >
                     <span>{opt.label}</span>
-                    {active && <Check className="h-4 w-4 text-[#303030]" />}
+                    {active && <Check className="h-4 w-4 text-ink" />}
                   </button>
                 );
               })}
             </div>
 
-            <div className="mb-2 mt-3 px-1 text-[11px] font-semibold uppercase tracking-wider text-[#8A8A8A]">
+            <div className="mb-2 mt-3 px-1 text-[11px] font-semibold uppercase tracking-wider text-ink-subtle">
               Sort by
             </div>
             <div className="flex flex-col gap-1">
@@ -120,29 +120,29 @@ export function FilterBar({ query, onQueryChange, value, onValueChange }: Props)
                     onClick={() => onValueChange({ ...value, sort: opt.value })}
                     className={cn(
                       'flex items-center justify-between rounded-lg px-2 py-1.5 text-left text-[13px] font-medium tracking-[-0.02em]',
-                      active ? 'bg-[#F0F0F0] text-[#303030]' : 'text-[#5E5E5E] hover:bg-[#F6F6F6]',
+                      active ? 'bg-surface-alt text-ink' : 'text-ink-muted hover:bg-surface-alt',
                     )}
                   >
                     <span>{opt.label}</span>
-                    {active && <Check className="h-4 w-4 text-[#303030]" />}
+                    {active && <Check className="h-4 w-4 text-ink" />}
                   </button>
                 );
               })}
             </div>
 
-            <div className="mt-3 flex items-center justify-between gap-2 border-t border-black/5 pt-2">
+            <div className="mt-3 flex items-center justify-between gap-2 border-t border-border pt-2">
               <button
                 type="button"
                 onClick={() => onValueChange(DEFAULT_FILTER_VALUE)}
                 disabled={isDefault}
-                className="text-[12px] font-medium tracking-[-0.02em] text-[#5E5E5E] hover:text-[#303030] disabled:opacity-40"
+                className="text-[12px] font-medium tracking-[-0.02em] text-ink-muted hover:text-ink disabled:opacity-40"
               >
                 Reset
               </button>
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                className="rounded-full bg-[#181818] px-3 py-1 text-[12px] font-semibold tracking-[-0.02em] text-white"
+                className="rounded-full bg-ink px-3 py-1 text-[12px] font-semibold tracking-[-0.02em] text-white"
               >
                 Done
               </button>
@@ -151,13 +151,13 @@ export function FilterBar({ query, onQueryChange, value, onValueChange }: Props)
         )}
       </div>
 
-      <div className="flex h-11 w-[228px] items-center rounded-full border border-black/20 px-4 py-[11px] lg:w-[265px] lg:border-black/20">
+      <div className="flex h-11 w-[228px] items-center rounded-full border border-border-strong px-4 py-[11px] lg:w-[265px] lg:border-border-strong">
         <Search className="h-4 w-4 shrink-0 text-ink-subtle" />
         <Input
           value={query}
           onChange={(e) => onQueryChange(e.target.value)}
           placeholder="Search Name"
-          className="h-5 min-w-0 flex-1 border-0 bg-transparent p-0 pl-3 text-[14px] font-normal leading-[140%] tracking-[-0.04em] text-[#A9A9A9] shadow-none placeholder:text-[#A9A9A9] focus:border-0 focus:ring-0"
+          className="h-5 min-w-0 flex-1 border-0 bg-transparent p-0 pl-3 text-[14px] font-normal leading-[140%] tracking-[-0.02em] text-ink-subtle shadow-none placeholder:text-ink-subtle focus:border-0 focus:ring-0"
         />
       </div>
     </div>

@@ -35,15 +35,16 @@ export function Modal({ open, onClose, title, children, size = 'md', closable = 
 
   if (!open) return null;
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 animate-slide-up">
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-ink/45 p-0 animate-slide-up sm:items-center sm:p-4">
       <div
         className={cn(
-          'w-full bg-surface rounded-3xl shadow-xl border border-border/60 overflow-hidden',
+          'w-full bg-surface shadow-float border border-border overflow-hidden',
+          'rounded-t-3xl sm:rounded-3xl',
           sizes[size],
         )}
       >
         {(title || closable) && (
-          <div className="flex items-center justify-between px-6 py-4 border-b border-border/60">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-border">
             <div className="font-semibold text-ink">{title}</div>
             {closable && (
               <button

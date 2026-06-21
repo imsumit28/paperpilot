@@ -139,7 +139,7 @@ Keep language clear and appropriate for ${grade} students.`;
               />
             </div>
           </div>
-          {genError && <p className="text-sm text-red-600">{genError}</p>}
+          {genError && <p className="text-sm text-rose-600">{genError}</p>}
           {loading && slow && !almostReady && (
             <p className="text-sm text-ink-muted">
               Your rubric is being built — please hang on a few more seconds…

@@ -29,14 +29,14 @@ export default function LibraryPage() {
           {savedPapers.map((assignment) => (
             <Card
               key={assignment.id}
-              className="relative w-full rounded-[24px] border-0 shadow-none p-5 lg:p-6 bg-white"
+              className="relative w-full rounded-[24px] p-5 lg:p-6 bg-white"
             >
               <div className="flex items-start justify-between gap-4">
                 <Link href={`/assignments/${assignment.id}`} className="min-w-0 flex-1">
-                  <h3 className="font-extrabold text-[18px] lg:text-[24px] leading-[140%] lg:leading-[120%] tracking-[-0.04em] text-[#303030] line-clamp-1">
+                  <h3 className="font-extrabold text-[18px] lg:text-[24px] leading-[140%] lg:leading-[120%] tracking-[-0.02em] text-ink line-clamp-1">
                     {assignment.title}
                   </h3>
-                  <div className="flex gap-4 mt-2 text-[14px] font-medium text-[#8A8A8A]">
+                  <div className="flex gap-4 mt-2 text-[14px] font-medium text-ink-subtle">
                     <span>Assigned: {formatDate(assignment.createdAt)}</span>
                     <span>Due: {formatDate(assignment.dueDate)}</span>
                   </div>

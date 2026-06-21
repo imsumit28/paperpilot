@@ -59,11 +59,11 @@ export default function GroupsPage() {
           {groups.map((group) => (
             <Card
               key={group.id}
-              className="rounded-[24px] border-0 shadow-none p-5 bg-white flex flex-col gap-3"
+              className="rounded-[24px] p-5 bg-white flex flex-col gap-3"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <h3 className="font-extrabold text-[16px] leading-[140%] tracking-[-0.03em] text-[#303030] line-clamp-2">
+                  <h3 className="font-extrabold text-[16px] leading-[140%] tracking-[-0.03em] text-ink line-clamp-2">
                     {group.name}
                   </h3>
                 </div>
@@ -77,15 +77,15 @@ export default function GroupsPage() {
                 </button>
               </div>
               <div className="flex flex-wrap gap-2">
-                <span className="inline-flex items-center h-7 px-3 rounded-full bg-[#F6F6F6] text-[#303030] text-[12px] font-semibold">
+                <span className="inline-flex items-center h-7 px-3 rounded-full bg-surface-alt text-ink text-[12px] font-semibold">
                   Class {group.class}
                 </span>
-                <span className="inline-flex items-center h-7 px-3 rounded-full bg-[#F6F6F6] text-[#303030] text-[12px] font-semibold">
+                <span className="inline-flex items-center h-7 px-3 rounded-full bg-surface-alt text-ink text-[12px] font-semibold">
                   {group.subject}
                 </span>
                 <span
                   className={`inline-flex items-center h-7 px-3 rounded-full text-[12px] font-semibold ${
-                    EXAM_TYPE_COLORS[group.examType] ?? 'bg-[#F6F6F6] text-[#303030]'
+                    EXAM_TYPE_COLORS[group.examType] ?? 'bg-surface-alt text-ink'
                   }`}
                 >
                   {group.examType}

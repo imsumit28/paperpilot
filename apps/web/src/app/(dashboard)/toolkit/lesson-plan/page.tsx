@@ -136,7 +136,7 @@ Be specific, practical, and age-appropriate for ${grade} students.`;
             />
             <FieldError>{errors.topic}</FieldError>
           </div>
-          {genError && <p className="text-sm text-red-600">{genError}</p>}
+          {genError && <p className="text-sm text-rose-600">{genError}</p>}
           {loading && slow && !almostReady && (
             <p className="text-sm text-ink-muted">
               Your lesson plan is being crafted — please hang on a few more seconds…

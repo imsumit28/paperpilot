@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 
-type Variant = 'primary' | 'secondary' | 'ghost' | 'outline' | 'danger';
+type Variant = 'primary' | 'accent' | 'dark' | 'secondary' | 'ghost' | 'outline' | 'danger';
 type Size = 'sm' | 'md' | 'lg';
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -13,11 +13,16 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 }
 
 const variantStyles: Record<Variant, string> = {
-  primary: 'bg-ink text-white hover:bg-black active:bg-black/90',
+  // Structural primary — Scholar Teal
+  primary: 'bg-brand-600 text-white hover:bg-brand-700 active:bg-brand-800',
+  // Warm "AI energy" accent — reserve for Generate / AI actions
+  accent: 'bg-accent-500 text-white hover:bg-accent-600 active:bg-accent-700',
+  // Special dark pill — Create / Toolkit hero only
+  dark: 'bg-ink text-white hover:bg-black active:bg-black/90',
   secondary: 'bg-white text-ink border border-border hover:bg-surface-alt',
   ghost: 'bg-transparent text-ink hover:bg-surface-alt',
   outline: 'bg-transparent text-ink border border-border hover:bg-surface-alt',
-  danger: 'bg-red-600 text-white hover:bg-red-700',
+  danger: 'bg-status-failed text-white hover:bg-rose-700',
 };
 
 const sizeStyles: Record<Size, string> = {

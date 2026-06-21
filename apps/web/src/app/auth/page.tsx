@@ -70,10 +70,10 @@ function AuthPageContent() {
   if (!hydrated) return null;
 
   return (
-    <div className="min-h-screen bg-[#EDEDED] px-4 py-6 lg:px-8 lg:py-8">
-      <div className="mx-auto grid w-full max-w-[1240px] overflow-hidden rounded-[30px] border border-border/40 bg-white shadow-[0px_24px_64px_rgba(0,0,0,0.12)] lg:min-h-[88vh] lg:grid-cols-[1.1fr_0.9fr]">
+    <div className="min-h-screen bg-surface-page px-4 py-6 lg:px-8 lg:py-8">
+      <div className="mx-auto grid w-full max-w-[1240px] overflow-hidden rounded-[30px] border border-border bg-white shadow-float lg:min-h-[88vh] lg:grid-cols-[1.1fr_0.9fr]">
         <section className="relative overflow-hidden bg-[#1F1F1F] p-6 text-white lg:p-10">
-          <div className="pointer-events-none absolute -left-20 -top-24 h-[260px] w-[260px] rounded-full bg-[#FF7A2D]/25 blur-3xl" />
+          <div className="pointer-events-none absolute -left-20 -top-24 h-[260px] w-[260px] rounded-full bg-brand-400/25 blur-3xl" />
           <div className="pointer-events-none absolute -bottom-20 -right-20 h-[260px] w-[260px] rounded-full bg-[#FFFFFF]/10 blur-3xl" />
           <div className="relative z-10">
             <VedaLogo variant="light" />
@@ -103,8 +103,8 @@ function AuthPageContent() {
               </div>
             </div>
 
-            <div className="mt-8 rounded-2xl border border-[#FFB486]/50 bg-[#2A2A2A] p-4">
-              <p className="text-xs font-semibold tracking-[0.08em] text-[#FFD8B8]">SYSTEM VERIFICATION IDEA</p>
+            <div className="mt-8 rounded-2xl border border-accent-300/40 bg-ink/40 p-4">
+              <p className="text-xs font-semibold tracking-[0.08em] text-accent-200">SYSTEM VERIFICATION IDEA</p>
               <p className="mt-2 text-sm text-white/85">
                 Profile binding links teacher identity + school branding so generated papers stay institution-specific across sessions.
               </p>
@@ -116,8 +116,8 @@ function AuthPageContent() {
           <div className="mx-auto w-full max-w-[460px]">
             <div className="mb-8">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.08em] text-[#A2A2A2]">Welcome</p>
-                <h2 className="mt-1 text-[30px] font-semibold tracking-[-0.04em] text-[#232323]">Enter your details</h2>
+                <p className="text-xs font-semibold uppercase tracking-[0.08em] text-ink-subtle">Welcome</p>
+                <h2 className="mt-1 text-[30px] font-semibold tracking-[-0.02em] text-ink">Enter your details</h2>
               </div>
             </div>
 
@@ -157,7 +157,7 @@ function AuthPageContent() {
               <div>
                 <Label htmlFor="schoolLogo">School Logo</Label>
                 <div className="flex items-center gap-3">
-                  <div className="h-11 w-11 overflow-hidden rounded-full bg-[#F6F6F6]">
+                  <div className="h-11 w-11 overflow-hidden rounded-full bg-surface-alt">
                     <UserAvatar size={44} src={schoolLogo || DEFAULT_SCHOOL_LOGO} alt={schoolName || 'School logo'} />
                   </div>
                   <input
@@ -165,7 +165,7 @@ function AuthPageContent() {
                     type="file"
                     accept="image/*"
                     onChange={onLogoSelect}
-                    className="block w-full text-sm text-[#5E5E5E] file:mr-3 file:rounded-full file:border-0 file:bg-[#303030] file:px-3 file:py-2 file:text-sm file:font-medium file:text-white"
+                    className="block w-full text-sm text-ink-muted file:mr-3 file:rounded-full file:border-0 file:bg-brand-600 file:px-3 file:py-2 file:text-sm file:font-medium file:text-white"
                   />
                 </div>
                 <div className="mt-3 flex items-center gap-2">

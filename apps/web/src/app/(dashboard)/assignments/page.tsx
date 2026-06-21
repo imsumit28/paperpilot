@@ -209,10 +209,10 @@ export default function AssignmentsPage() {
 
       <div className="hidden lg:block mb-3 px-2">
         <div className="flex items-center gap-2">
-          <span className="h-3 w-3 rounded-full bg-[#4BC26D] border-4 border-[rgba(75,194,109,0.4)]" />
-          <h1 className="text-[20px] leading-[140%] tracking-[-0.04em] font-bold text-[#303030]">Assignments</h1>
+          <span className="h-3 w-3 rounded-full bg-brand-500 border-4 border-brand-200" />
+          <h1 className="text-[20px] leading-[140%] tracking-[-0.02em] font-bold text-ink">Assignments</h1>
         </div>
-        <p className="text-[14px] leading-[140%] tracking-[-0.04em] text-[rgba(94,94,94,0.55)] mt-0.5">
+        <p className="text-[14px] leading-[140%] tracking-[-0.02em] text-ink-subtle mt-0.5">
           Manage and create assignments for your classes.
         </p>
       </div>
@@ -268,7 +268,7 @@ export default function AssignmentsPage() {
 
       <div className="hidden lg:flex sticky bottom-3 justify-center pointer-events-none">
         <Link href="/assignments/new" className="pointer-events-auto">
-          <Button iconLeft={<Plus className="h-4 w-4" />} className="shadow-lg bg-[#181818] hover:bg-black text-white px-6 h-8 text-sm">
+          <Button iconLeft={<Plus className="h-4 w-4" />} className="shadow-lg bg-ink hover:bg-black text-white px-6 h-8 text-sm">
             Create Assignment
           </Button>
         </Link>
@@ -308,7 +308,7 @@ function SelectionBar({
         <button
           type="button"
           onClick={onEnter}
-          className="inline-flex items-center gap-1.5 h-8 px-3 rounded-full bg-white border border-black/10 text-[13px] font-semibold tracking-[-0.02em] text-[#303030] hover:bg-[#F6F6F6]"
+          className="inline-flex items-center gap-1.5 h-8 px-3 rounded-full bg-white border border-border text-[13px] font-semibold tracking-[-0.02em] text-ink hover:bg-surface-alt"
         >
           <CheckSquare className="h-3.5 w-3.5" />
           Select
@@ -317,17 +317,17 @@ function SelectionBar({
     );
   }
   return (
-    <div className="flex items-center justify-between gap-2 rounded-2xl bg-white border border-black/10 px-3 py-2">
+    <div className="flex items-center justify-between gap-2 rounded-2xl bg-white border border-border px-3 py-2">
       <div className="flex items-center gap-2 min-w-0">
         <button
           type="button"
           onClick={onCancel}
-          className="h-8 w-8 flex items-center justify-center rounded-full hover:bg-[#F6F6F6]"
+          className="h-8 w-8 flex items-center justify-center rounded-full hover:bg-surface-alt"
           aria-label="Cancel selection"
         >
-          <X className="h-4 w-4 text-[#303030]" />
+          <X className="h-4 w-4 text-ink" />
         </button>
-        <span className="text-[13px] font-semibold tracking-[-0.02em] text-[#303030]">
+        <span className="text-[13px] font-semibold tracking-[-0.02em] text-ink">
           {selectedCount} selected
         </span>
       </div>
@@ -336,7 +336,7 @@ function SelectionBar({
           type="button"
           onClick={onToggleAll}
           disabled={totalVisible === 0}
-          className="h-8 px-3 rounded-full border border-black/10 text-[13px] font-semibold tracking-[-0.02em] text-[#303030] hover:bg-[#F6F6F6] disabled:opacity-40 disabled:hover:bg-transparent"
+          className="h-8 px-3 rounded-full border border-border text-[13px] font-semibold tracking-[-0.02em] text-ink hover:bg-surface-alt disabled:opacity-40 disabled:hover:bg-transparent"
         >
           {allVisibleSelected ? 'Deselect all' : 'Select all'}
         </button>
@@ -344,7 +344,7 @@ function SelectionBar({
           type="button"
           onClick={onDelete}
           disabled={selectedCount === 0 || bulkDeleting}
-          className="inline-flex items-center gap-1.5 h-8 px-3 rounded-full bg-[#C53535] text-white text-[13px] font-semibold tracking-[-0.02em] hover:bg-[#A82828] disabled:opacity-40"
+          className="inline-flex items-center gap-1.5 h-8 px-3 rounded-full bg-status-failed text-white text-[13px] font-semibold tracking-[-0.02em] hover:bg-rose-700 disabled:opacity-40"
         >
           <Trash2 className="h-3.5 w-3.5" />
           {bulkDeleting ? 'Deleting…' : 'Delete'}
@@ -367,7 +367,7 @@ function MobileFab() {
   return (
     <Link
       href="/assignments/new"
-      className="lg:hidden fixed bottom-24 right-4 z-20 h-12 w-12 rounded-full bg-white shadow-lg flex items-center justify-center text-[#FF5623]"
+      className="lg:hidden fixed bottom-24 right-4 z-20 h-12 w-12 rounded-full bg-white shadow-lg flex items-center justify-center text-accent-500"
       aria-label="Create Assignment"
     >
       <Plus className="h-5 w-5" />
@@ -385,9 +385,9 @@ function MobileAssignmentsHeader({ onBack }: { onBack: () => void }) {
           className="absolute left-0 h-12 w-12 rounded-full bg-[rgba(255,255,255,0.25)] backdrop-blur-[12px] flex items-center justify-center"
           aria-label="Back"
         >
-          <ArrowLeft className="h-6 w-6 text-[#303030]" strokeWidth={2.25} />
+          <ArrowLeft className="h-6 w-6 text-ink" strokeWidth={2.25} />
         </button>
-        <h1 className="text-[16px] font-bold leading-[140%] tracking-[-0.04em] text-[#303030]">Assignments</h1>
+        <h1 className="text-[16px] font-bold leading-[140%] tracking-[-0.02em] text-ink">Assignments</h1>
       </div>
     </div>
   );
@@ -405,7 +405,7 @@ function SkeletonGrid() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       {Array.from({ length: 4 }).map((_, i) => (
-        <div key={i} className="bg-white rounded-2xl border border-border/60 p-5 h-32 animate-pulse">
+        <div key={i} className="bg-white rounded-2xl border border-border p-5 h-32 animate-pulse">
           <div className="h-4 w-2/3 bg-surface-alt rounded mb-3" />
           <div className="h-3 w-1/3 bg-surface-alt rounded mb-6" />
           <div className="flex justify-between">

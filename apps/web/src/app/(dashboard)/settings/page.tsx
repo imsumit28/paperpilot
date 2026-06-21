@@ -222,7 +222,7 @@ function LogoSection({
 
         <div className="flex flex-col gap-5">
           <div className="flex flex-wrap items-center gap-3 sm:gap-4">
-            <div className="h-16 w-16 shrink-0 rounded-full overflow-hidden bg-[#E8DEF7]">
+            <div className="h-16 w-16 shrink-0 rounded-full overflow-hidden bg-brand-100">
               <UserAvatar size={64} src={preview ?? currentLogo} alt={schoolName} />
             </div>
             <div className="min-w-0 flex-1 text-sm text-ink-muted">
@@ -240,13 +240,13 @@ function LogoSection({
             )}
           </div>
 
-          <div className="flex items-center gap-2 rounded-full bg-[#F0F0F0] p-1 w-fit">
+          <div className="flex items-center gap-2 rounded-full bg-surface-alt p-1 w-fit">
             <button
               type="button"
               onClick={() => setMode('url')}
               className={cn(
                 'inline-flex items-center gap-1.5 h-8 px-3 rounded-full text-[13px] font-semibold tracking-[-0.02em]',
-                mode === 'url' ? 'bg-white text-[#303030] shadow-sm' : 'text-[#5E5E5E]',
+                mode === 'url' ? 'bg-white text-ink shadow-sm' : 'text-ink-muted',
               )}
             >
               <LinkIcon className="h-3.5 w-3.5" />
@@ -257,7 +257,7 @@ function LogoSection({
               onClick={() => setMode('upload')}
               className={cn(
                 'inline-flex items-center gap-1.5 h-8 px-3 rounded-full text-[13px] font-semibold tracking-[-0.02em]',
-                mode === 'upload' ? 'bg-white text-[#303030] shadow-sm' : 'text-[#5E5E5E]',
+                mode === 'upload' ? 'bg-white text-ink shadow-sm' : 'text-ink-muted',
               )}
             >
               <Upload className="h-3.5 w-3.5" />
@@ -274,7 +274,7 @@ function LogoSection({
                   placeholder="https://example.com/logo.png"
                   onKeyDown={(e) => e.key === 'Enter' && handleUrlPreview()}
                 />
-                {previewError && <p className="mt-1 text-xs text-red-600">{previewError}</p>}
+                {previewError && <p className="mt-1 text-xs text-rose-600">{previewError}</p>}
               </div>
               <Button
                 variant="secondary"

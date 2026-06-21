@@ -54,13 +54,13 @@ export function Topbar({ title = 'Assignment', showBack = true }: TopbarProps) {
             <button
               type="button"
               onClick={() => router.back()}
-              className="hidden h-10 w-10 items-center justify-center rounded-full bg-white hover:bg-[#F6F6F6] lg:flex"
+              className="hidden h-10 w-10 items-center justify-center rounded-full bg-white hover:bg-surface-alt lg:flex"
               aria-label="Back"
             >
-              <ArrowLeft className="h-6 w-6 text-[#303030]" strokeWidth={2.5} />
+              <ArrowLeft className="h-6 w-6 text-ink" strokeWidth={2.5} />
             </button>
           )}
-          <div className="hidden h-[19px] flex-1 items-center gap-2 text-[16px] font-semibold leading-[19px] tracking-[-0.04em] text-[#A9A9A9] lg:flex">
+          <div className="hidden h-[19px] flex-1 items-center gap-2 text-[16px] font-semibold leading-[19px] tracking-[-0.02em] text-ink-subtle lg:flex">
             <LayoutGrid className="h-5 w-5 shrink-0" strokeWidth={2} />
             <span>{title}</span>
           </div>
@@ -77,11 +77,11 @@ export function Topbar({ title = 'Assignment', showBack = true }: TopbarProps) {
             </div>
             <button
               type="button"
-              className="h-6 w-6 flex items-center justify-center rounded-full hover:bg-[#F6F6F6]"
+              className="h-6 w-6 flex items-center justify-center rounded-full hover:bg-surface-alt"
               onClick={() => setSidebarOpen(true)}
               aria-label="Open menu"
             >
-              <Menu className="h-5 w-5 text-[#1D1B20]" strokeWidth={2} />
+              <Menu className="h-5 w-5 text-ink" strokeWidth={2} />
             </button>
           </div>
 
@@ -92,35 +92,35 @@ export function Topbar({ title = 'Assignment', showBack = true }: TopbarProps) {
               onClick={() => setMenuOpen((v) => !v)}
               title={teacherName}
               aria-label={teacherName}
-              className="flex items-center w-[157px] h-[44px] px-[12px] py-[6px] gap-2 rounded-[12px] bg-[#F6F6F6] shadow-none"
+              className="flex items-center w-[157px] h-[44px] px-[12px] py-[6px] gap-2 rounded-xl bg-surface-alt hover:bg-border/60 transition-colors shadow-none"
             >
-              <div className="h-8 w-8 rounded-full overflow-hidden bg-[#F6F6F6] shrink-0">
+              <div className="h-8 w-8 rounded-full overflow-hidden bg-surface-alt shrink-0">
                 <UserAvatar size={32} className="rounded-full overflow-hidden" src={schoolLogo} alt={teacherName} />
               </div>
               <div className="flex h-6 w-[93px] items-center gap-1">
-                <span className="text-[16px] font-semibold leading-[19px] text-[#303030] tracking-[-0.04em] truncate">{teacherName}</span>
-                <ChevronDown className="h-6 w-6 text-[#303030] shrink-0" strokeWidth={1.5} />
+                <span className="text-[16px] font-semibold leading-[19px] text-ink tracking-[-0.02em] truncate">{teacherName}</span>
+                <ChevronDown className="h-6 w-6 text-ink-muted shrink-0" strokeWidth={1.5} />
               </div>
             </button>
             {/* Hover tooltip — only when name is wider than the pill can show */}
             {!menuOpen && (
               <div
                 role="tooltip"
-                className="pointer-events-none absolute right-0 top-[calc(100%+6px)] z-50 hidden max-w-[260px] whitespace-normal break-words rounded-lg bg-[#303030] px-3 py-1.5 text-[12px] font-medium leading-tight text-white shadow-[0px_8px_24px_rgba(0,0,0,0.18)] group-hover:block"
+                className="pointer-events-none absolute right-0 top-[calc(100%+6px)] z-50 hidden max-w-[260px] whitespace-normal break-words rounded-lg bg-ink px-3 py-1.5 text-[12px] font-medium leading-tight text-white shadow-raised group-hover:block"
               >
                 {teacherName}
               </div>
             )}
             {menuOpen && (
-              <div className="absolute right-0 top-[50px] z-50 min-w-[200px] max-w-[280px] rounded-xl border border-border/40 bg-white p-1 shadow-[0px_16px_48px_rgba(0,0,0,0.18)]">
+              <div className="absolute right-0 top-[50px] z-50 min-w-[200px] max-w-[280px] rounded-xl border border-border bg-white p-1 shadow-raised">
                 <div className="px-3 py-2">
-                  <div className="text-[13px] font-semibold text-[#303030] break-words">{teacherName}</div>
+                  <div className="text-[13px] font-semibold text-ink break-words">{teacherName}</div>
                 </div>
-                <div className="my-1 h-px bg-[#F0F0F0]" />
+                <div className="my-1 h-px bg-border" />
                 <button
                   type="button"
                   onClick={handleSignOut}
-                  className="w-full rounded-lg px-3 py-2 text-left text-sm font-medium text-[#303030] hover:bg-[#F0F0F0]"
+                  className="w-full rounded-lg px-3 py-2 text-left text-sm font-medium text-ink hover:bg-surface-alt"
                 >
                   Sign out
                 </button>

@@ -209,10 +209,10 @@ export default function AssignmentDetailPage() {
           <GenerationProgress onRetry={handleRegenerate} />
         </div>
       ) : (
-        <div className="w-full max-w-[373px] lg:max-w-[1100px] mx-auto bg-white lg:bg-[#5E5E5E] rounded-[40px] lg:rounded-[32px] p-[9px] lg:p-5 flex flex-col gap-[10px] lg:gap-3">
-          <div className="w-full lg:max-w-[1060px] lg:mx-auto min-h-[147px] lg:min-h-[164px] bg-[#303030] lg:bg-[rgba(24,24,24,0.8)] rounded-[32px] text-white px-4 py-6 lg:px-8 lg:py-6 flex flex-col justify-center items-start gap-3 lg:gap-4 lg:items-center">
+        <div className="w-full max-w-[373px] lg:max-w-[1100px] mx-auto bg-white lg:bg-ink-muted rounded-[40px] lg:rounded-[32px] p-[9px] lg:p-5 flex flex-col gap-[10px] lg:gap-3">
+          <div className="w-full lg:max-w-[1060px] lg:mx-auto min-h-[147px] lg:min-h-[164px] bg-ink lg:bg-ink/90 rounded-[32px] text-white px-4 py-6 lg:px-8 lg:py-6 flex flex-col justify-center items-start gap-3 lg:gap-4 lg:items-center">
             <div className="flex items-start gap-3 max-w-[323px] lg:max-w-none">
-              <div className="w-full font-bold text-[14px] leading-[17px] tracking-[-0.04em] text-[#F0F0F0] font-[Bricolage_Grotesque]">
+              <div className="w-full font-bold text-[14px] leading-[17px] tracking-[-0.02em] text-white/90 font-[Bricolage_Grotesque]">
                 Here&apos;s your customized question paper for {assignment.school} — {assignment.subject}, Class{' '}
                 {assignment.class}.
               </div>
@@ -253,7 +253,7 @@ export default function AssignmentDetailPage() {
                 onClick={handleDownload}
                 loading={downloading}
                 iconLeft={<Download className="h-4 w-4" />}
-                className="hidden lg:inline-flex bg-white text-[#303030] hover:bg-white/90 h-11 rounded-full px-6"
+                className="hidden lg:inline-flex bg-white text-ink hover:bg-white/90 h-11 rounded-full px-6"
               >
                 Download as PDF
               </Button>

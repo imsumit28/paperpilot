@@ -141,14 +141,14 @@ export function VoiceInputButton({
         className={cn(
           'flex h-9 w-9 items-center justify-center rounded-full border transition-colors',
           listening
-            ? 'border-red-500 bg-red-500 text-white animate-pulse'
-            : 'border-[#DADADA] bg-white text-[#303030] hover:bg-[#F0F0F0]',
+            ? 'border-rose-500 bg-rose-500 text-white animate-pulse'
+            : 'border-border bg-white text-ink hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700',
         )}
       >
         <Icon className="h-4 w-4" />
       </button>
       {error && (
-        <span className="text-[12px] leading-[140%] tracking-[-0.04em] text-red-600">{error}</span>
+        <span className="text-[12px] leading-[140%] tracking-[-0.02em] text-rose-600">{error}</span>
       )}
     </div>
   );

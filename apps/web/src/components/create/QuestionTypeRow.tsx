@@ -22,7 +22,7 @@ export function QuestionTypeRow({ type, count, marks, takenTypes, onChange, onRe
   })).filter((o) => o.value === type || !takenTypes.includes(o.value));
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_auto_auto] items-center gap-3 py-3 border-b border-border/60 last:border-0">
+    <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_auto_auto] items-center gap-3 py-3 border-b border-border last:border-0">
       <div className="flex items-center gap-2">
         <Select
           value={type}

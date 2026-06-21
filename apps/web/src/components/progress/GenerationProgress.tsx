@@ -25,9 +25,9 @@ export function GenerationProgress({ onRetry }: Props) {
   const currentIndex = step ? STEP_ORDER.indexOf(step) : -1;
 
   return (
-    <div className="bg-white rounded-3xl border border-border/60 shadow-card p-6 sm:p-8 max-w-2xl mx-auto">
+    <div className="bg-white rounded-3xl border border-border shadow-card p-6 sm:p-8 max-w-2xl mx-auto">
       <div className="flex items-center gap-3 mb-6">
-        <div className="relative h-10 w-10 rounded-full bg-brand/10 flex items-center justify-center text-brand">
+        <div className="relative h-10 w-10 rounded-full bg-brand-50 flex items-center justify-center text-brand-600">
           {status === 'failed' ? (
             <AlertCircle className="h-5 w-5" />
           ) : status === 'complete' ? (
@@ -65,9 +65,9 @@ export function GenerationProgress({ onRetry }: Props) {
               <span
                 className={`h-5 w-5 rounded-full flex items-center justify-center text-[10px] font-bold transition-colors ${
                   done
-                    ? 'bg-emerald-500 text-white'
+                    ? 'bg-status-ready text-white'
                     : current
-                      ? 'bg-brand text-white'
+                      ? 'bg-brand-600 text-white'
                       : 'bg-surface-alt text-ink-subtle border border-border'
                 }`}
               >
@@ -82,9 +82,9 @@ export function GenerationProgress({ onRetry }: Props) {
       </ol>
 
       {status === 'failed' && error && (
-        <div className="mt-6 rounded-2xl bg-red-50 border border-red-200 p-4 overflow-hidden">
-          <div className="text-sm font-semibold text-red-700 break-words">{error.code}</div>
-          <div className="text-sm text-red-600 mt-1 break-words">{error.message}</div>
+        <div className="mt-6 rounded-2xl bg-status-failed-bg border border-rose-200 p-4 overflow-hidden">
+          <div className="text-sm font-semibold text-rose-700 break-words">{error.code}</div>
+          <div className="text-sm text-rose-600 mt-1 break-words">{error.message}</div>
           {onRetry && (
             <Button variant="danger" className="mt-3" onClick={onRetry}>
               Retry generation

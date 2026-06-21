@@ -51,7 +51,7 @@ export function FileUpload({ file, onFile }: Props) {
         }}
         className={cn(
           'flex min-h-[202px] flex-col items-center justify-center gap-4 rounded-[24px] border-[1.75px] border-dashed px-4 py-6 text-center transition-colors lg:px-8',
-          dragging ? 'border-brand bg-brand/5' : 'border-black/20 bg-white',
+          dragging ? 'border-brand bg-brand/5' : 'border-border-strong bg-white',
         )}
       >
         <input
@@ -64,7 +64,7 @@ export function FileUpload({ file, onFile }: Props) {
         {file ? (
           <div className="flex max-w-full items-center justify-center gap-3">
             <FileText className="h-5 w-5 text-ink-muted" />
-            <span className="max-w-[60%] truncate text-[16px] font-medium leading-[140%] tracking-[-0.04em] text-[#303030]">
+            <span className="max-w-[60%] truncate text-[16px] font-medium leading-[140%] tracking-[-0.02em] text-ink">
               {file.name}
             </span>
             <button
@@ -79,20 +79,20 @@ export function FileUpload({ file, onFile }: Props) {
         ) : (
           <div className="flex flex-col items-center gap-4">
             <div className="flex h-10 w-10 items-center justify-center rounded-[8px] bg-white">
-              <CloudUpload className="h-6 w-6 text-[#1E1E1E]" />
+              <CloudUpload className="h-6 w-6 text-ink" />
             </div>
             <div className="flex flex-col items-center gap-1">
-              <div className="max-w-[253px] text-[16px] font-medium leading-[140%] tracking-[-0.04em] text-[#303030] lg:max-w-none">
+              <div className="max-w-[253px] text-[16px] font-medium leading-[140%] tracking-[-0.02em] text-ink lg:max-w-none">
                 Choose a file or drag &amp; drop it here
               </div>
-              <div className="max-w-[253px] text-[14px] leading-[140%] tracking-[-0.04em] text-[#A9A9A9] lg:max-w-none">
+              <div className="max-w-[253px] text-[14px] leading-[140%] tracking-[-0.02em] text-ink-subtle lg:max-w-none">
                 JPEG, PNG, upto 10MB
               </div>
             </div>
             <button
               type="button"
               onClick={() => inputRef.current?.click()}
-              className="h-9 rounded-full bg-[#F6F6F6] px-6 text-[14px] font-medium leading-[140%] tracking-[-0.04em] text-[#303030]"
+              className="h-9 rounded-full bg-surface-alt px-6 text-[14px] font-medium leading-[140%] tracking-[-0.02em] text-ink"
             >
               Continue
             </button>
@@ -100,7 +100,7 @@ export function FileUpload({ file, onFile }: Props) {
         )}
       </div>
       {error && <p className="mt-2 text-xs text-red-600">{error}</p>}
-      <p className="max-w-[317px] text-center text-[16px] leading-[140%] tracking-[-0.04em] text-[rgba(48,48,48,0.6)]">
+      <p className="max-w-[317px] text-center text-[16px] leading-[140%] tracking-[-0.02em] text-ink-muted">
         Upload images of your preferred document/image
       </p>
     </div>

@@ -36,7 +36,7 @@ const PRIMARY: NavItem[] = [
   { href: '/library', label: 'My Library', icon: MyLibraryIcon },
 ];
 
-const MUTED_COLOR = 'rgba(94, 94, 94, 0.8)';
+const MUTED_COLOR = '#5B6072';
 
 const TOOLKIT_OPTIONS: Array<ToolkitOption & { Icon: React.ComponentType<{ className?: string }> }> = [
   {
@@ -210,8 +210,8 @@ export function Sidebar({ assignmentCount }: { assignmentCount?: number } = {}) 
           'fixed lg:sticky lg:top-0 z-50 lg:z-0',
           'left-3 top-3 bottom-3 lg:w-[304px] lg:h-[820px] w-72',
           'lg:max-h-full lg:overflow-y-auto',
-          'bg-white rounded-2xl border border-border/40',
-          'shadow-[0px_16px_48px_rgba(0,0,0,0.12),0px_32px_48px_rgba(0,0,0,0.2)]',
+          'bg-white rounded-3xl border border-border',
+          'shadow-float',
           'flex flex-col p-6 transition-transform',
           'lg:translate-x-0',
           sidebarOpen ? 'translate-x-0' : '-translate-x-[110%]',
@@ -221,7 +221,7 @@ export function Sidebar({ assignmentCount }: { assignmentCount?: number } = {}) 
           <VedaLogo />
           <button
             type="button"
-            className="lg:hidden h-8 w-8 flex items-center justify-center rounded-full hover:bg-[#F0F0F0]"
+            className="lg:hidden h-8 w-8 flex items-center justify-center rounded-full hover:bg-surface-alt"
             onClick={() => setSidebarOpen(false)}
             aria-label="Close menu"
           >
@@ -249,7 +249,7 @@ export function Sidebar({ assignmentCount }: { assignmentCount?: number } = {}) 
             {toolkitOpen && !toolkit.busy && (
               <div
                 role="menu"
-                className="absolute left-0 right-0 top-[50px] z-50 rounded-2xl border border-border/40 bg-white p-2 shadow-[0px_16px_48px_rgba(0,0,0,0.18)]"
+                className="absolute left-0 right-0 top-[50px] z-50 rounded-2xl border border-border bg-white p-2 shadow-raised"
               >
                 {TOOLKIT_OPTIONS.map(({ Icon, ...option }) => (
                   <button
@@ -257,15 +257,15 @@ export function Sidebar({ assignmentCount }: { assignmentCount?: number } = {}) 
                     type="button"
                     role="menuitem"
                     onClick={() => handleToolkitOption(option)}
-                    className="flex w-full items-start gap-3 rounded-xl px-3 py-2 text-left hover:bg-[#F0F0F0]"
+                    className="flex w-full items-start gap-3 rounded-xl px-3 py-2 text-left hover:bg-surface-alt"
                   >
-                    <Icon className="mt-0.5 h-[18px] w-[18px] shrink-0 text-[#303030]" />
+                    <Icon className="mt-0.5 h-[18px] w-[18px] shrink-0 text-brand-600" />
                     <span className="flex min-w-0 flex-col">
-                      <span className="text-sm font-medium text-[#303030] tracking-[-0.02em]">
+                      <span className="text-sm font-medium text-ink tracking-[-0.02em]">
                         {option.label}
                       </span>
                       {option.description && (
-                        <span className="text-xs text-[#5E5E5E] leading-snug">
+                        <span className="text-xs text-ink-muted leading-snug">
                           {option.description}
                         </span>
                       )}
@@ -302,17 +302,17 @@ export function Sidebar({ assignmentCount }: { assignmentCount?: number } = {}) 
                 href={item.href}
                 onClick={() => setSidebarOpen(false)}
                 className={cn(
-                  'flex items-center gap-2 rounded-lg px-3 h-[38px] text-base tracking-[-0.04em]',
+                  'flex items-center gap-2 rounded-lg px-3 h-[38px] text-base tracking-[-0.02em] transition-colors',
                   active
-                    ? 'bg-[#F0F0F0] text-[#303030] font-medium'
-                    : 'hover:bg-[#F0F0F0] hover:text-[#303030] font-normal',
+                    ? 'bg-brand-50 text-brand-700 font-semibold'
+                    : 'hover:bg-surface-alt hover:text-ink font-normal',
                 )}
                 style={!active ? { color: MUTED_COLOR } : undefined}
               >
                 <Icon className="h-5 w-5 shrink-0" />
                 <span className="flex-1">{item.label}</span>
                 {showBadge && (
-                  <span className="inline-flex h-[20px] w-[34px] items-center justify-center rounded-[48px] bg-[#FF5623] px-[10px] text-[14px] font-semibold leading-[140%] tracking-[-0.04em] text-white shadow-[inset_0px_0px_32.3px_rgba(255,161,10,0.25)]">
+                  <span className="inline-flex h-[20px] min-w-[34px] items-center justify-center rounded-full bg-accent-500 px-[10px] text-[14px] font-semibold leading-[140%] tracking-[-0.02em] text-white">
                     {assignmentTotal}
                   </span>
                 )}
@@ -327,22 +327,22 @@ export function Sidebar({ assignmentCount }: { assignmentCount?: number } = {}) 
           <Link
             href="/settings"
             onClick={() => setSidebarOpen(false)}
-            className="flex items-center gap-2 rounded-lg px-3 h-[38px] text-base tracking-[-0.04em] font-normal hover:bg-[#F0F0F0] hover:text-[#303030]"
+            className="flex items-center gap-2 rounded-lg px-3 h-[38px] text-base tracking-[-0.02em] font-normal hover:bg-surface-alt hover:text-ink"
             style={{ color: MUTED_COLOR }}
           >
             <Settings className="h-5 w-5 shrink-0" />
             <span>Settings</span>
           </Link>
 
-          <div className="bg-[#F0F0F0] rounded-2xl p-3 flex items-center gap-2 h-20">
-            <div className="shrink-0 w-[60px] h-14 rounded-[28px] overflow-hidden bg-[#E8DEF7]">
+          <div className="bg-surface-alt rounded-2xl p-3 flex items-center gap-2 h-20">
+            <div className="shrink-0 w-[60px] h-14 rounded-[28px] overflow-hidden bg-brand-100">
               <UserAvatar size={60} src={schoolLogo} alt={schoolName} />
             </div>
             <div className="min-w-0 flex flex-col">
-              <div className="text-base font-bold text-[#303030] truncate tracking-[-0.04em] leading-[1.4]">
+              <div className="text-base font-bold text-ink truncate tracking-[-0.02em] leading-[1.4]">
                 {schoolName}
               </div>
-              <div className="text-sm font-normal text-[#5E5E5E] truncate tracking-[-0.04em] leading-[1.4]">
+              <div className="text-sm font-normal text-ink-muted truncate tracking-[-0.02em] leading-[1.4]">
                 {schoolAddress}
               </div>
             </div>

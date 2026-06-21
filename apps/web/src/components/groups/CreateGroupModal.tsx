@@ -67,7 +67,7 @@ function Chip({
       className={cn(
         'h-9 px-4 rounded-full border text-sm font-semibold transition-colors whitespace-nowrap',
         active
-          ? 'bg-ink text-white border-ink'
+          ? 'bg-brand-600 text-white border-brand-600'
           : 'bg-white text-ink border-border hover:bg-surface-alt',
       )}
     >
@@ -223,7 +223,7 @@ export function CreateGroupModal({ open, onClose }: Props) {
                   className={cn(
                     'h-9 w-11 rounded-full border text-sm font-semibold transition-colors',
                     secClass === c
-                      ? 'bg-ink text-white border-ink'
+                      ? 'bg-brand-600 text-white border-brand-600'
                       : 'bg-white text-ink border-border hover:bg-surface-alt',
                   )}
                 >

@@ -57,32 +57,32 @@ export function NotificationsBell() {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="relative h-9 w-9 flex items-center justify-center rounded-full bg-[#F6F6F6] hover:bg-[#EDEDED] lg:h-9 lg:w-9"
+        className="relative h-9 w-9 flex items-center justify-center rounded-full bg-surface-alt hover:bg-border/60 lg:h-9 lg:w-9"
         aria-label={
           unreadCount > 0 ? `Notifications, ${unreadCount} unread` : 'Notifications'
         }
       >
-        <Bell className="h-5 w-5 text-[#303030]" strokeWidth={2} />
+        <Bell className="h-5 w-5 text-ink" strokeWidth={2} />
         {unreadCount > 0 ? (
-          <span className="absolute -top-0.5 -right-0.5 inline-flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-[#FF5623] px-1 text-[10px] font-semibold leading-none text-white shadow-[0_0_0_2px_white]">
+          <span className="absolute -top-0.5 -right-0.5 inline-flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-accent-500 px-1 text-[10px] font-semibold leading-none text-white shadow-[0_0_0_2px_white]">
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         ) : items.length > 0 ? (
-          <span className="absolute top-[1px] right-[1px] h-2 w-2 rounded-full bg-[#FF5623]" />
+          <span className="absolute top-[1px] right-[1px] h-2 w-2 rounded-full bg-accent-500" />
         ) : null}
       </button>
 
       {open && (
-        <div className="fixed left-4 right-4 top-[80px] lg:absolute lg:left-auto lg:right-0 lg:top-12 z-40 lg:w-[320px] rounded-2xl border border-black/10 bg-white shadow-[0px_16px_48px_rgba(0,0,0,0.18)]">
-          <div className="flex items-center justify-between border-b border-black/5 px-4 py-3">
-            <span className="text-[14px] font-semibold tracking-[-0.02em] text-[#303030]">
+        <div className="fixed left-4 right-4 top-[80px] lg:absolute lg:left-auto lg:right-0 lg:top-12 z-40 lg:w-[320px] rounded-2xl border border-border bg-white shadow-raised">
+          <div className="flex items-center justify-between border-b border-border px-4 py-3">
+            <span className="text-[14px] font-semibold tracking-[-0.02em] text-ink">
               Notifications
             </span>
             {items.length > 0 && (
               <button
                 type="button"
                 onClick={() => clear()}
-                className="text-[12px] font-medium tracking-[-0.02em] text-[#5E5E5E] hover:text-[#303030]"
+                className="text-[12px] font-medium tracking-[-0.02em] text-ink-muted hover:text-ink"
               >
                 Clear all
               </button>
@@ -91,7 +91,7 @@ export function NotificationsBell() {
 
           <div className="max-h-[360px] overflow-y-auto px-2 py-2">
             {items.length === 0 ? (
-              <div className="px-3 py-8 text-center text-[13px] text-[#8A8A8A]">
+              <div className="px-3 py-8 text-center text-[13px] text-ink-subtle">
                 No notifications yet.
               </div>
             ) : (
@@ -105,21 +105,21 @@ export function NotificationsBell() {
                         : Info;
                   const color =
                     n.type === 'success'
-                      ? 'text-emerald-500'
+                      ? 'text-status-ready'
                       : n.type === 'error'
-                        ? 'text-red-500'
-                        : 'text-blue-500';
+                        ? 'text-status-failed'
+                        : 'text-brand-600';
                   const body = (
-                    <div className="flex items-start gap-3 rounded-xl px-3 py-2 hover:bg-[#F6F6F6]">
+                    <div className="flex items-start gap-3 rounded-xl px-3 py-2 hover:bg-surface-alt">
                       <Icon className={`mt-0.5 h-4 w-4 shrink-0 ${color}`} />
                       <div className="min-w-0 flex-1">
-                        <div className="truncate text-[13px] font-semibold tracking-[-0.02em] text-[#303030]">
+                        <div className="truncate text-[13px] font-semibold tracking-[-0.02em] text-ink">
                           {n.title}
                         </div>
-                        <div className="truncate text-[12px] text-[#5E5E5E]">
+                        <div className="truncate text-[12px] text-ink-muted">
                           {n.message}
                         </div>
-                        <div className="mt-0.5 text-[11px] text-[#8A8A8A]">
+                        <div className="mt-0.5 text-[11px] text-ink-subtle">
                           {formatRelative(n.createdAt)}
                         </div>
                       </div>
@@ -131,7 +131,7 @@ export function NotificationsBell() {
                           remove(n.id);
                         }}
                         aria-label="Dismiss"
-                        className="shrink-0 rounded-full p-1 text-[#A9A9A9] hover:bg-black/5 hover:text-[#303030]"
+                        className="shrink-0 rounded-full p-1 text-ink-subtle hover:bg-surface-alt hover:text-ink"
                       >
                         <X className="h-3.5 w-3.5" />
                       </button>

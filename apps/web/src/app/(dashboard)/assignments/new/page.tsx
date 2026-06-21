@@ -139,9 +139,9 @@ export default function NewAssignmentPage() {
         <div className="flex w-full flex-col items-center gap-6 lg:gap-8">
           <div className="self-start flex w-full items-start gap-2.5 lg:max-w-[820px] lg:ml-3">
             <div className="relative flex min-h-[50px] flex-1 flex-col justify-center gap-1 pl-7">
-              <h1 className="text-[16px] font-bold leading-[1.2] tracking-[-0.04em] text-[#303030] lg:text-[38px]">Create Assignment</h1>
-              <span className="absolute left-0 top-1/2 h-[10px] w-[10px] -translate-y-1/2 rounded-full bg-[#52C878] shadow-[0_0_0_3px_rgba(82,200,120,0.24)]" />
-              <p className="text-[14px] leading-[1.25] tracking-[-0.03em] text-[rgba(94,94,94,0.52)] lg:text-[16px]">Set up a new assignment for your students</p>
+              <h1 className="text-[16px] font-bold leading-[1.2] tracking-[-0.02em] text-ink lg:text-[38px]">Create Assignment</h1>
+              <span className="absolute left-0 top-1/2 h-[10px] w-[10px] -translate-y-1/2 rounded-full bg-brand-500 shadow-[0_0_0_3px_rgba(14,138,114,0.20)]" />
+              <p className="text-[14px] leading-[1.25] tracking-[-0.03em] text-ink-subtle lg:text-[16px]">Set up a new assignment for your students</p>
             </div>
           </div>
 
@@ -150,8 +150,8 @@ export default function NewAssignmentPage() {
           <section className="w-full rounded-[32px] bg-[rgba(255,255,255,0.5)] px-4 py-8 lg:max-w-[810px] lg:p-8">
             <div className="flex flex-col gap-6 lg:gap-8">
               <div className="flex flex-col gap-0.5">
-                <h2 className="text-[16px] font-bold leading-[140%] tracking-[-0.04em] text-[#303030] lg:text-[20px]">Assignment Details</h2>
-                <p className="text-[14px] leading-[140%] tracking-[-0.04em] text-[rgba(94,94,94,0.8)]">Basic information about your assignment</p>
+                <h2 className="text-[16px] font-bold leading-[140%] tracking-[-0.02em] text-ink lg:text-[20px]">Assignment Details</h2>
+                <p className="text-[14px] leading-[140%] tracking-[-0.02em] text-ink-muted">Basic information about your assignment</p>
               </div>
 
               <div className="flex flex-col gap-4">
@@ -162,7 +162,7 @@ export default function NewAssignmentPage() {
                     placeholder="e.g. Quiz on Electricity"
                     value={draft.title}
                     onChange={(e) => draft.set({ title: e.target.value })}
-                    className="h-11 rounded-full px-4 text-[16px] tracking-[-0.04em]"
+                    className="h-11 rounded-full px-4 text-[16px] tracking-[-0.02em]"
                   />
                   <FieldError>{errors.title}</FieldError>
                 </div>
@@ -174,7 +174,7 @@ export default function NewAssignmentPage() {
                       id="subject"
                       value={draft.subject}
                       onChange={(e) => draft.set({ subject: e.target.value })}
-                      className="h-11 rounded-full px-4 text-[16px] tracking-[-0.04em]"
+                      className="h-11 rounded-full px-4 text-[16px] tracking-[-0.02em]"
                     />
                     <FieldError>{errors.subject}</FieldError>
                   </div>
@@ -185,7 +185,7 @@ export default function NewAssignmentPage() {
                       id="class"
                       value={draft.class}
                       onChange={(e) => draft.set({ class: e.target.value })}
-                      className="h-11 rounded-full px-4 text-[16px] tracking-[-0.04em]"
+                      className="h-11 rounded-full px-4 text-[16px] tracking-[-0.02em]"
                     />
                     <FieldError>{errors.class}</FieldError>
                   </div>
@@ -197,7 +197,7 @@ export default function NewAssignmentPage() {
                     id="school"
                     value={draft.school}
                     onChange={(e) => draft.set({ school: e.target.value })}
-                    className="h-11 rounded-full px-4 text-[16px] tracking-[-0.04em]"
+                    className="h-11 rounded-full px-4 text-[16px] tracking-[-0.02em]"
                   />
                   <FieldError>{errors.school}</FieldError>
                 </div>
@@ -214,9 +214,9 @@ export default function NewAssignmentPage() {
                     min={todayIsoDate()}
                     value={draft.dueDate}
                     onChange={(e) => draft.set({ dueDate: e.target.value })}
-                    className="h-11 rounded-full border-[#DADADA] px-4 pr-12 text-[16px] tracking-[-0.04em]"
+                    className="h-11 rounded-full border-border px-4 pr-12 text-[16px] tracking-[-0.02em]"
                   />
-                  <CalendarIcon className="pointer-events-none absolute right-4 top-1/2 h-6 w-6 -translate-y-1/2 text-[#2B2B2B]" />
+                  <CalendarIcon className="pointer-events-none absolute right-4 top-1/2 h-6 w-6 -translate-y-1/2 text-ink-muted" />
                 </div>
                 <FieldError>{errors.dueDate}</FieldError>
               </div>
@@ -248,10 +248,10 @@ export default function NewAssignmentPage() {
                   onChange={(e) => draft.set({ additionalInfo: e.target.value })}
                   placeholder="e.g. Generate a question paper for 1 hour duration..."
                   maxLength={1000}
-                  className="min-h-[102px] rounded-[16px] border-[#DADADA] bg-[rgba(255,255,255,0.25)] px-4 py-4 text-[14px] tracking-[-0.04em]"
+                  className="min-h-[102px] rounded-[16px] border-border bg-[rgba(255,255,255,0.25)] px-4 py-4 text-[14px] tracking-[-0.02em]"
                 />
                 <FieldError>{errors.additionalInfo}</FieldError>
-                <p className="mt-2 text-right text-[12px] leading-[140%] tracking-[-0.04em] text-ink-muted">
+                <p className="mt-2 text-right text-[12px] leading-[140%] tracking-[-0.02em] text-ink-muted">
                   {draft.additionalInfo.length}/1000
                 </p>
               </div>
@@ -261,7 +261,7 @@ export default function NewAssignmentPage() {
                   variant="secondary"
                   iconLeft={<ArrowLeft className="h-5 w-5" />}
                   onClick={() => router.back()}
-                  className="h-[46px] rounded-full px-5 text-[16px] tracking-[-0.04em]"
+                  className="h-[46px] rounded-full px-5 text-[16px] tracking-[-0.02em]"
                 >
                   Previous
                 </Button>
@@ -270,7 +270,7 @@ export default function NewAssignmentPage() {
                   loading={submitting}
                   iconLeft={<Sparkles className="h-4 w-4 text-brand-300" />}
                   iconRight={<ArrowRight className="h-5 w-5" />}
-                  className="h-[46px] rounded-full bg-[#181818] px-5 text-[16px] tracking-[-0.04em]"
+                  className="h-[46px] rounded-full bg-ink px-5 text-[16px] tracking-[-0.02em]"
                 >
                   Continue
                 </Button>
@@ -286,9 +286,9 @@ export default function NewAssignmentPage() {
 function StepRail() {
   return (
     <div className="self-start flex w-full max-w-[660px] items-center gap-2 lg:ml-[112px] lg:max-w-[760px]">
-      <div className="h-0 flex-1 border-t-[4px] border-[#686868] rounded-full" />
-      <span className="h-[8px] w-[8px] shrink-0 rounded-full bg-[#BEBEBE]" />
-      <div className="h-0 flex-1 border-t-[4px] border-[#D6D6D6] rounded-full" />
+      <div className="h-0 flex-1 border-t-[4px] border-brand-500 rounded-full" />
+      <span className="h-[8px] w-[8px] shrink-0 rounded-full bg-brand-300" />
+      <div className="h-0 flex-1 border-t-[4px] border-border-strong rounded-full" />
     </div>
   );
 }
@@ -314,7 +314,7 @@ function QuestionTypeSection({
     <div className="flex w-full flex-col gap-4 lg:gap-4">
       <div className="flex w-full flex-col gap-4 lg:h-[314px] lg:flex-row lg:justify-between lg:gap-16">
         <div className="flex w-full flex-col gap-4 lg:h-[314px] lg:w-[471px]">
-          <div className="text-[16px] font-bold leading-[140%] tracking-[-0.04em] text-[#303030]">Question Type</div>
+          <div className="text-[16px] font-bold leading-[140%] tracking-[-0.02em] text-ink">Question Type</div>
           <div className="flex flex-col gap-3 lg:gap-4">
             {rows.map((row, index) => {
               const options = QUESTION_TYPES.map((type) => ({
@@ -329,38 +329,38 @@ function QuestionTypeSection({
                       value={row.type}
                       onChange={(e) => setRow(index, { type: e.target.value as QuestionType })}
                       options={options}
-                      className="h-6 border-0 bg-transparent p-0 pr-8 text-[16px] font-medium tracking-[-0.04em] shadow-none"
+                      className="h-6 border-0 bg-transparent p-0 pr-8 text-[16px] font-medium tracking-[-0.02em] shadow-none"
                     />
                   </div>
-                  <button type="button" onClick={() => removeRow(index)} className="hidden h-4 w-4 shrink-0 items-center justify-center text-[#303030] lg:flex" aria-label="Remove row">
+                  <button type="button" onClick={() => removeRow(index)} className="hidden h-4 w-4 shrink-0 items-center justify-center text-ink lg:flex" aria-label="Remove row">
                     <X className="h-4 w-4" />
                   </button>
 
                   <div className="flex w-full items-start gap-3 lg:hidden">
                     <div className="flex-1">
-                      <div className="text-[14px] font-medium leading-[140%] tracking-[-0.04em] text-[#303030]">No. of Questions</div>
+                      <div className="text-[14px] font-medium leading-[140%] tracking-[-0.02em] text-ink">No. of Questions</div>
                       <Counter
                         value={row.count}
                         onChange={(next) => setRow(index, { count: next })}
                         min={1}
                         max={30}
-                        className="mt-2 h-[38px] w-full justify-between rounded-full border-[#DADADA] bg-white px-2 py-2"
+                        className="mt-2 h-[38px] w-full justify-between rounded-full border-border bg-white px-2 py-2"
                       />
                     </div>
                     <div className="flex-1">
-                      <div className="text-[14px] font-medium leading-[140%] tracking-[-0.04em] text-[#303030]">Marks</div>
+                      <div className="text-[14px] font-medium leading-[140%] tracking-[-0.02em] text-ink">Marks</div>
                       <Counter
                         value={row.marks}
                         onChange={(next) => setRow(index, { marks: next })}
                         min={1}
                         max={20}
-                        className="mt-2 h-[38px] w-full justify-between rounded-full border-[#DADADA] bg-white px-2 py-2"
+                        className="mt-2 h-[38px] w-full justify-between rounded-full border-border bg-white px-2 py-2"
                       />
                     </div>
                     <button
                       type="button"
                       onClick={() => removeRow(index)}
-                      className="mt-7 flex h-4 w-4 shrink-0 items-center justify-center text-[#303030]"
+                      className="mt-7 flex h-4 w-4 shrink-0 items-center justify-center text-ink"
                       aria-label="Remove row"
                     >
                       <X className="h-4 w-4" />
@@ -374,9 +374,9 @@ function QuestionTypeSection({
               <button
                 type="button"
                 onClick={() => addRow(availableType)}
-                className="mt-2 inline-flex h-9 items-center gap-2 self-start text-[14px] font-bold leading-[140%] tracking-[-0.04em] text-[#303030]"
+                className="mt-2 inline-flex h-9 items-center gap-2 self-start text-[14px] font-bold leading-[140%] tracking-[-0.02em] text-ink"
               >
-                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#2B2B2B] text-white">
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-600 text-white">
                   <Plus className="h-5 w-5" />
                 </span>
                 Add Question Type
@@ -386,7 +386,7 @@ function QuestionTypeSection({
         </div>
 
         <div className="hidden w-full flex-col lg:flex lg:h-[262px] lg:w-[275px]">
-          <div className="mb-4 flex h-[22px] items-center justify-between gap-4 text-[16px] font-medium leading-[140%] tracking-[-0.04em] text-[#303030]">
+          <div className="mb-4 flex h-[22px] items-center justify-between gap-4 text-[16px] font-medium leading-[140%] tracking-[-0.02em] text-ink">
             <span className="w-[116px] text-center">No. of Questions</span>
             <span className="w-[100px] text-center">Marks</span>
           </div>
@@ -399,14 +399,14 @@ function QuestionTypeSection({
                   onChange={(next) => setRow(index, { count: next })}
                   min={1}
                   max={30}
-                  className="h-11 w-[100px] justify-between rounded-full border-[#DADADA] bg-white px-2 py-2"
+                  className="h-11 w-[100px] justify-between rounded-full border-border bg-white px-2 py-2"
                 />
                 <Counter
                   value={row.marks}
                   onChange={(next) => setRow(index, { marks: next })}
                   min={1}
                   max={20}
-                  className="h-11 w-[100px] justify-between rounded-full border-[#DADADA] bg-white px-2 py-2"
+                  className="h-11 w-[100px] justify-between rounded-full border-border bg-white px-2 py-2"
                 />
               </div>
             ))}
@@ -414,7 +414,7 @@ function QuestionTypeSection({
         </div>
       </div>
 
-      <div className="flex h-auto w-full flex-col items-end gap-1 text-right text-[14px] font-medium leading-[110%] tracking-[-0.04em] text-[#303030] lg:h-[44px] lg:flex-row lg:items-end lg:justify-between lg:gap-4 lg:text-[16px] lg:pl-[471px] lg:pr-[34px]">
+      <div className="flex h-auto w-full flex-col items-end gap-1 text-right text-[14px] font-medium leading-[110%] tracking-[-0.02em] text-ink lg:h-[44px] lg:flex-row lg:items-end lg:justify-between lg:gap-4 lg:text-[16px] lg:pl-[471px] lg:pr-[34px]">
         <div className="w-full text-right lg:w-[150px]">
           Total Questions : <span className="font-normal">{totals.totalQuestions}</span>
         </div>

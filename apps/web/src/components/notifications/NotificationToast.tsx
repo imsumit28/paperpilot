@@ -34,8 +34,8 @@ export function NotificationToast() {
     toast.type === 'success'
       ? 'text-emerald-400'
       : toast.type === 'error'
-        ? 'text-red-400'
-        : 'text-blue-400';
+        ? 'text-rose-400'
+        : 'text-brand-300';
 
   return (
     <div
@@ -45,7 +45,7 @@ export function NotificationToast() {
       aria-live="polite"
       role="status"
     >
-      <div className="flex items-center gap-3 rounded-full bg-[#181818] px-5 py-3 text-white shadow-[0px_16px_48px_rgba(0,0,0,0.25)]">
+      <div className="flex items-center gap-3 rounded-full bg-ink px-5 py-3 text-white shadow-raised">
         <Icon className={`h-5 w-5 ${iconColor}`} />
         <span className="text-[14px] font-semibold leading-[140%] tracking-[-0.02em]">
           {toast.message}
