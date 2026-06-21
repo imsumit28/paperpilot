@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, CheckSquare, Plus, Trash2, X } from 'lucide-react';
+import { ArrowLeft, CheckSquare, LayoutGrid, List, Plus, Trash2, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import {
@@ -20,10 +20,11 @@ import {
   FilterBar,
   type FilterBarValue,
 } from '@/components/assignments/FilterBar';
-import { listAssignments, deleteAssignment } from '@/lib/api';
+import { listAssignments, deleteAssignment, regenerateAssignment } from '@/lib/api';
 import { getSocket } from '@/lib/socket';
 import { subscribeToJob, unsubscribeFromJob } from '@/lib/jobSubscriptions';
 import { useAssignmentCountStore } from '@/store/useAssignmentCountStore';
+import { useGenerationStore } from '@/store/useGenerationStore';
 
 export default function AssignmentsPage() {
   const router = useRouter();
@@ -37,6 +38,8 @@ export default function AssignmentsPage() {
   const [selectionMode, setSelectionMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set());
   const [bulkDeleting, setBulkDeleting] = useState(false);
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const startGen = useGenerationStore((s) => s.start);
 
   async function refresh() {
     try {
@@ -112,7 +115,13 @@ export default function AssignmentsPage() {
       }
     };
     const result = items.filter(
-      (a) => a.title.toLowerCase().includes(needle) && matchesStatus(a),
+      (a) => {
+        const haystack = `${a.title} ${a.subject} ${a.class} ${a.school}`.toLowerCase();
+        const matchesQuery = needle.length === 0 || haystack.includes(needle);
+        const matchesSubject = filter.subject === 'all' || a.subject === filter.subject;
+        const matchesClass = filter.className === 'all' || a.class === filter.className;
+        return matchesQuery && matchesSubject && matchesClass && matchesStatus(a);
+      },
     );
     const sorted = [...result];
     sorted.sort((a, b) => {
@@ -123,6 +132,8 @@ export default function AssignmentsPage() {
           return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
         case 'due-soonest':
           return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
+        case 'updated':
+          return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
         case 'title-asc':
           return a.title.localeCompare(b.title);
         default:
@@ -131,6 +142,24 @@ export default function AssignmentsPage() {
     });
     return sorted;
   }, [items, query, filter]);
+
+  const filterOptions = useMemo(() => {
+    const subjects = Array.from(new Set(items.map((a) => a.subject).filter(Boolean))).sort((a, b) =>
+      a.localeCompare(b),
+    );
+    const classes = Array.from(new Set(items.map((a) => a.class).filter(Boolean))).sort((a, b) =>
+      a.localeCompare(b, undefined, { numeric: true }),
+    );
+    return { subjects, classes };
+  }, [items]);
+
+  const metrics = useMemo(() => {
+    const generating = items.filter((a) => a.status === 'pending' || a.status === 'processing').length;
+    const ready = items.filter((a) => a.status === 'completed').length;
+    const failed = items.filter((a) => a.status === 'failed').length;
+    const pdfReady = items.filter((a) => a.pdfReady || a.paper).length;
+    return { total: items.length, generating, ready, failed, pdfReady };
+  }, [items]);
 
   async function handleDelete(id: string) {
     if (!confirm('Delete this assignment?')) return;
@@ -141,6 +170,31 @@ export default function AssignmentsPage() {
       toast.success('Assignment deleted');
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Delete failed');
+    }
+  }
+
+  async function handleRegenerate(id: string) {
+    const current = items.find((a) => a.id === id);
+    try {
+      const res = await regenerateAssignment(id);
+      startGen(res.id, res.jobId, current?.title);
+      setItems((prev) =>
+        prev.map((a) =>
+          a.id === id
+            ? {
+                ...a,
+                status: 'pending' as const,
+                jobId: res.jobId,
+                paper: undefined,
+                pdfReady: false,
+                updatedAt: new Date().toISOString(),
+              }
+            : a,
+        ),
+      );
+      toast.success('Regeneration started');
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Failed to regenerate');
     }
   }
 
@@ -207,15 +261,15 @@ export default function AssignmentsPage() {
       <Topbar title="Assignments" />
       <AssignmentsStrip onBack={() => router.back()} />
 
-      <div className="hidden lg:flex items-end justify-between gap-4 mb-5 px-2">
+      <div className="hidden lg:flex items-end justify-between gap-4 mb-4 px-2">
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-subtle">
             Your assessments
           </p>
-          <h1 className="mt-0.5 text-[28px] leading-tight tracking-[-0.02em] font-bold text-ink">
+          <h1 className="mt-0.5 text-[26px] leading-tight font-bold text-ink">
             Assignments
           </h1>
-          <p className="text-[14px] leading-[140%] tracking-[-0.01em] text-ink-muted mt-1">
+          <p className="text-[14px] leading-[140%] text-ink-muted mt-1">
             Manage, generate, and grade papers for your classes.
           </p>
         </div>
@@ -224,6 +278,14 @@ export default function AssignmentsPage() {
             Create Assignment
           </Button>
         </Link>
+      </div>
+
+      <div className="hidden lg:grid grid-cols-5 gap-3 mb-4 px-2">
+        <SummaryMetric label="Total" value={metrics.total} />
+        <SummaryMetric label="Ready" value={metrics.ready} tone="ready" />
+        <SummaryMetric label="Generating" value={metrics.generating} tone="processing" />
+        <SummaryMetric label="Failed" value={metrics.failed} tone="failed" />
+        <SummaryMetric label="PDFs" value={metrics.pdfReady} />
       </div>
 
       {error && (
@@ -255,20 +317,59 @@ export default function AssignmentsPage() {
           onQueryChange={setQuery}
           value={filter}
           onValueChange={setFilter}
+          subjects={filterOptions.subjects}
+          classes={filterOptions.classes}
         />
+
+        <div className="flex items-center justify-between gap-3 px-1">
+          <p className="text-[13px] font-medium text-ink-muted">
+            Showing <span className="font-semibold text-ink">{filtered.length}</span> of{' '}
+            <span className="font-semibold text-ink">{items.length}</span>
+          </p>
+          <div className="hidden items-center rounded-full border border-border bg-white p-1 md:flex">
+            <button
+              type="button"
+              title="Grid view"
+              onClick={() => setViewMode('grid')}
+              className={`flex h-8 w-8 items-center justify-center rounded-full ${
+                viewMode === 'grid' ? 'bg-brand-50 text-brand-700' : 'text-ink-muted hover:bg-surface-alt'
+              }`}
+            >
+              <LayoutGrid className="h-4 w-4" />
+            </button>
+            <button
+              type="button"
+              title="List view"
+              onClick={() => setViewMode('list')}
+              className={`flex h-8 w-8 items-center justify-center rounded-full ${
+                viewMode === 'list' ? 'bg-brand-50 text-brand-700' : 'text-ink-muted hover:bg-surface-alt'
+              }`}
+            >
+              <List className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
 
         {filtered.length === 0 ? (
           <div className="text-center py-12 text-sm text-ink-muted">No assignments match your search.</div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pb-24 lg:pb-16">
+          <div
+            className={
+              viewMode === 'list'
+                ? 'grid grid-cols-1 gap-3 pb-24 lg:pb-16'
+                : 'grid grid-cols-1 md:grid-cols-2 gap-3 pb-24 lg:pb-16'
+            }
+          >
             {filtered.map((a) => (
               <AssignmentCard
                 key={a.id}
                 assignment={a}
                 onDelete={handleDelete}
+                onRegenerate={handleRegenerate}
                 selectable={selectionMode}
                 selected={selectedIds.has(a.id)}
                 onToggleSelect={toggleSelect}
+                layout={viewMode}
               />
             ))}
           </div>
@@ -277,6 +378,32 @@ export default function AssignmentsPage() {
 
       <BottomBlurFade />
       <MobileFab />
+    </div>
+  );
+}
+
+function SummaryMetric({
+  label,
+  value,
+  tone,
+}: {
+  label: string;
+  value: number;
+  tone?: 'ready' | 'processing' | 'failed';
+}) {
+  const toneClass =
+    tone === 'ready'
+      ? 'text-status-ready'
+      : tone === 'processing'
+        ? 'text-status-processing'
+        : tone === 'failed'
+          ? 'text-status-failed'
+          : 'text-ink';
+
+  return (
+    <div className="rounded-2xl border border-border bg-white px-4 py-3 shadow-card">
+      <div className="text-[12px] font-medium text-ink-subtle">{label}</div>
+      <div className={`mt-1 text-[22px] font-bold leading-none ${toneClass}`}>{value}</div>
     </div>
   );
 }
