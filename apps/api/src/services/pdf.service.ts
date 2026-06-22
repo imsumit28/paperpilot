@@ -9,17 +9,25 @@ const PDF_TTL_SECONDS = 60 * 60 * 24; // 1 day
 const PDF_WAIT_TIMEOUT_MS = 45_000;
 const PDF_POLL_INTERVAL_MS = 500;
 
-export async function getCachedPdf(id: string): Promise<Buffer | null> {
+/** Confirms the assignment belongs to this device, else throws 404. */
+async function assertOwned(deviceId: string, id: string): Promise<void> {
+  const owned = await AssignmentModel.exists({ _id: id, deviceId });
+  if (!owned) throw notFound('Assignment not found');
+}
+
+export async function getCachedPdf(deviceId: string, id: string): Promise<Buffer | null> {
+  await assertOwned(deviceId, id);
   const raw = await redisQueue.getBuffer(PDF_KEY(id));
   return raw ?? null;
 }
 
-export async function ensurePdf(id: string): Promise<Buffer> {
-  const cached = await getCachedPdf(id);
+export async function ensurePdf(deviceId: string, id: string): Promise<Buffer> {
+  const doc = await AssignmentModel.findOne({ _id: id, deviceId });
+  if (!doc) throw notFound('Assignment not found');
+
+  const cached = await redisQueue.getBuffer(PDF_KEY(id));
   if (cached) return cached;
 
-  const doc = await AssignmentModel.findById(id);
-  if (!doc) throw notFound('Assignment not found');
   if (doc.status !== 'completed' || !doc.paper) {
     const err: Error & { status?: number; code?: string } = new Error('Paper not ready yet');
     err.status = 409;
@@ -45,7 +53,7 @@ export async function ensurePdf(id: string): Promise<Buffer> {
     await new Promise((r) => setTimeout(r, PDF_POLL_INTERVAL_MS));
     const fresh = await AssignmentModel.findById(id).select('pdfReady').lean();
     if (fresh?.pdfReady) {
-      const buf = await getCachedPdf(id);
+      const buf = await redisQueue.getBuffer(PDF_KEY(id));
       if (buf) return buf;
       // pdfReady was set but the cache buffer is missing — treat as a failure.
       logger.warn({ id }, 'pdfReady true but Redis cache missing');

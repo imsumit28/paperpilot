@@ -30,7 +30,7 @@ export async function createHandler(req: Request, res: Response, next: NextFunct
       parsed.sourceText = extracted;
     }
 
-    const dto = await createAssignment(parsed);
+    const dto = await createAssignment(req.deviceId!, parsed);
     res.status(201).json({ ok: true, data: { id: dto.id, jobId: dto.jobId, assignment: dto } });
   } catch (err) {
     next(err);
@@ -41,7 +41,7 @@ export async function listHandler(req: Request, res: Response, next: NextFunctio
   try {
     const page = Math.max(1, Number.parseInt(String(req.query.page ?? '1'), 10) || 1);
     const pageSize = Math.min(50, Math.max(1, Number.parseInt(String(req.query.pageSize ?? '20'), 10) || 20));
-    const data = await listAssignments({ page, pageSize });
+    const data = await listAssignments(req.deviceId!, { page, pageSize });
     res.json({ ok: true, data });
   } catch (err) {
     next(err);
@@ -50,7 +50,7 @@ export async function listHandler(req: Request, res: Response, next: NextFunctio
 
 export async function getHandler(req: Request, res: Response, next: NextFunction) {
   try {
-    const dto = await getAssignment(req.params.id);
+    const dto = await getAssignment(req.deviceId!, req.params.id);
     res.json({ ok: true, data: dto });
   } catch (err) {
     next(err);
@@ -59,7 +59,7 @@ export async function getHandler(req: Request, res: Response, next: NextFunction
 
 export async function deleteHandler(req: Request, res: Response, next: NextFunction) {
   try {
-    await deleteAssignment(req.params.id);
+    await deleteAssignment(req.deviceId!, req.params.id);
     res.status(204).send();
   } catch (err) {
     next(err);
@@ -75,7 +75,7 @@ export async function regenerateHandler(req: Request, res: Response, next: NextF
       typeof rawAppend === 'string' && rawAppend.trim().length > 0
         ? rawAppend.slice(0, 1000)
         : undefined;
-    const dto = await regenerateAssignment(req.params.id, { additionalInfoAppend });
+    const dto = await regenerateAssignment(req.deviceId!, req.params.id, { additionalInfoAppend });
     res.json({ ok: true, data: { id: dto.id, jobId: dto.jobId, assignment: dto } });
   } catch (err) {
     next(err);
@@ -85,8 +85,8 @@ export async function regenerateHandler(req: Request, res: Response, next: NextF
 export async function pdfHandler(req: Request, res: Response, next: NextFunction) {
   try {
     const buf = req.query.cache === 'only'
-      ? await getCachedPdf(req.params.id)
-      : await ensurePdf(req.params.id);
+      ? await getCachedPdf(req.deviceId!, req.params.id)
+      : await ensurePdf(req.deviceId!, req.params.id);
     if (!buf) {
       res.status(202).json({ ok: false, error: { code: 'PENDING', message: 'PDF not cached yet' } });
       return;

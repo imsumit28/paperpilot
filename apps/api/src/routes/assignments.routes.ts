@@ -8,6 +8,7 @@ import {
   pdfHandler,
   regenerateHandler,
 } from '../controllers/assignments.controller';
+import { requireDevice } from '../middleware/device';
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -15,6 +16,9 @@ const upload = multer({
 });
 
 const router = Router();
+
+// Every assignment endpoint is scoped to the calling device.
+router.use(requireDevice);
 
 // Accept either multipart (with optional file) OR plain JSON
 router.post('/', upload.single('file'), createHandler);

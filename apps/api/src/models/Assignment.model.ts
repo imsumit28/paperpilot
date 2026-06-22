@@ -53,6 +53,10 @@ const PaperSubSchema = new Schema(
 
 const AssignmentSchema = new Schema(
   {
+    // Owner of this assignment. Without a real authenticated account system,
+    // this is the per-device id sent by the client. Every read/write is scoped
+    // by it so one device can never see another device's assignments.
+    deviceId: { type: String, required: true, index: true },
     title: { type: String, required: true, trim: true },
     subject: { type: String, required: true, default: 'General' },
     class: { type: String, required: true, default: '5' },
@@ -93,7 +97,8 @@ const AssignmentSchema = new Schema(
   { timestamps: true },
 );
 
-AssignmentSchema.index({ createdAt: -1 });
+// List queries always filter by owner and sort newest-first.
+AssignmentSchema.index({ deviceId: 1, createdAt: -1 });
 
 export type AssignmentDoc = InferSchemaType<typeof AssignmentSchema>;
 export type AssignmentHydrated = HydratedDocument<AssignmentDoc>;

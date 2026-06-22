@@ -6,15 +6,10 @@ import {
   ArrowDownRight,
   ArrowRight,
   ArrowUpRight,
-  BookOpen,
-  CheckSquare,
   ClipboardList,
-  FileText,
-  LayoutList,
   Minus,
   Plus,
   Sparkles,
-  Users,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { AssignmentDto } from '@paper-pilot/shared';
@@ -36,12 +31,6 @@ function greeting(d: Date): string {
 function formatToday(d: Date): string {
   return d.toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' });
 }
-
-const TOOLS = [
-  { href: '/toolkit/lesson-plan', label: 'Lesson Planner', desc: 'Plan any topic', Icon: BookOpen },
-  { href: '/toolkit/rubric', label: 'Rubric Builder', desc: 'Marking criteria', Icon: LayoutList },
-  { href: '/toolkit/grading', label: 'Grading Assistant', desc: 'Instant feedback', Icon: CheckSquare },
-];
 
 export default function HomePage() {
   const teacherName = useAuthStore((s) => s.teacherName);
@@ -211,9 +200,8 @@ export default function HomePage() {
         />
       </div>
 
-      {/* Two-column: recent + tools */}
-      <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-[1.6fr_1fr]">
-        {/* Recent */}
+      {/* Recent assignments */}
+      <div className="mt-6">
         <section>
           <SectionHeader
             eyebrow="Pick up where you left off"
@@ -255,34 +243,6 @@ export default function HomePage() {
                 ))}
               </ul>
             )}
-          </div>
-        </section>
-
-        {/* Tools + quick links */}
-        <section>
-          <SectionHeader eyebrow="AI Teacher's Toolkit" title="Tools" href="/toolkit" />
-          <div className="mt-3 flex flex-col gap-3">
-            {TOOLS.map(({ href, label, desc, Icon }) => (
-              <Link
-                key={href}
-                href={href}
-                className="group flex items-center gap-3 rounded-2xl border border-border bg-surface px-4 py-3.5 transition-all hover:border-brand-300 hover:shadow-raised"
-              >
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-50 text-accent-600">
-                  <Icon className="h-5 w-5" />
-                </span>
-                <div className="min-w-0 flex-1">
-                  <div className="text-[14px] font-semibold text-ink tracking-[-0.01em]">{label}</div>
-                  <div className="text-[12px] text-ink-muted">{desc}</div>
-                </div>
-                <ArrowRight className="h-4 w-4 text-ink-subtle transition-transform group-hover:translate-x-0.5 group-hover:text-brand-600" />
-              </Link>
-            ))}
-
-            <div className="grid grid-cols-2 gap-3 pt-1">
-              <QuickLink href="/library" label="My Library" Icon={FileText} />
-              <QuickLink href="/groups" label="My Groups" Icon={Users} />
-            </div>
           </div>
         </section>
       </div>
@@ -463,26 +423,6 @@ function SectionHeader({
         <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover/sh:translate-x-0.5" />
       </Link>
     </div>
-  );
-}
-
-function QuickLink({
-  href,
-  label,
-  Icon,
-}: {
-  href: string;
-  label: string;
-  Icon: React.ComponentType<{ className?: string }>;
-}) {
-  return (
-    <Link
-      href={href}
-      className="flex items-center gap-2 rounded-2xl border border-border bg-surface px-3.5 py-3 text-[13px] font-semibold text-ink transition-colors hover:bg-surface-alt"
-    >
-      <Icon className="h-4 w-4 text-ink-muted" />
-      {label}
-    </Link>
   );
 }
 

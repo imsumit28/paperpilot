@@ -195,7 +195,7 @@ export function Sidebar({ assignmentCount }: { assignmentCount?: number } = {}) 
       {sidebarOpen && (
         <button
           type="button"
-          className="fixed inset-0 z-40 bg-black/40 lg:hidden"
+          className="fixed inset-0 z-40 bg-ink/30 backdrop-blur-sm lg:hidden"
           aria-label="Close menu"
           onClick={() => setSidebarOpen(false)}
         />
@@ -206,13 +206,21 @@ export function Sidebar({ assignmentCount }: { assignmentCount?: number } = {}) 
           'fixed lg:sticky lg:top-0 z-50 lg:z-0',
           'left-3 top-3 bottom-3 lg:w-[304px] lg:h-[820px] w-72',
           'lg:max-h-full lg:overflow-y-auto',
-          'bg-white rounded-3xl border border-border',
+          // Clean white shell with a hairline border and a soft float
+          'relative isolate overflow-hidden rounded-3xl border border-border',
+          'bg-white',
           'shadow-float',
           'flex flex-col p-6 transition-transform',
           'lg:translate-x-0',
           sidebarOpen ? 'translate-x-0' : '-translate-x-[110%]',
         )}
       >
+        {/* Faint brand wash bleeding from the top for a touch of depth */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -top-28 left-1/2 -z-10 h-56 w-[120%] -translate-x-1/2 rounded-full bg-brand-100/50 blur-3xl"
+        />
+
         <div className="flex items-center justify-between mb-8">
           <span className="flex items-center gap-2">
             <BrandLogo variant="mark" className="h-9 w-9 object-contain" />
@@ -220,7 +228,7 @@ export function Sidebar({ assignmentCount }: { assignmentCount?: number } = {}) 
           </span>
           <button
             type="button"
-            className="lg:hidden h-8 w-8 flex items-center justify-center rounded-full hover:bg-surface-alt"
+            className="lg:hidden h-8 w-8 flex items-center justify-center rounded-full text-ink-muted hover:bg-surface-alt hover:text-ink transition-colors"
             onClick={() => setSidebarOpen(false)}
             aria-label="Close menu"
           >
@@ -236,7 +244,7 @@ export function Sidebar({ assignmentCount }: { assignmentCount?: number } = {}) 
               disabled={toolkit.busy}
               aria-haspopup="menu"
               aria-expanded={toolkitOpen ? 'true' : 'false'}
-              className="create-assignment-shadow flex items-center justify-center gap-2.5 w-full h-[42px] rounded-full bg-[#272727] text-white font-medium text-base hover:bg-black/90 font-inter tracking-tight disabled:opacity-60 disabled:cursor-not-allowed"
+              className="create-assignment-shadow flex items-center justify-center gap-2.5 w-full h-[42px] rounded-full bg-gradient-to-r from-brand-600 to-brand-500 text-white font-medium text-base hover:from-brand-500 hover:to-brand-400 font-inter tracking-tight disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {toolkit.busy ? (
                 <Loader2 className="h-[18px] w-[18px] animate-spin" />
@@ -256,7 +264,7 @@ export function Sidebar({ assignmentCount }: { assignmentCount?: number } = {}) 
                     type="button"
                     role="menuitem"
                     onClick={() => handleToolkitOption(option)}
-                    className="flex w-full items-start gap-3 rounded-xl px-3 py-2 text-left hover:bg-surface-alt"
+                    className="flex w-full items-start gap-3 rounded-xl px-3 py-2 text-left hover:bg-surface-alt transition-colors"
                   >
                     <Icon className="mt-0.5 h-[18px] w-[18px] shrink-0 text-brand-600" />
                     <span className="flex min-w-0 flex-col">
@@ -282,7 +290,7 @@ export function Sidebar({ assignmentCount }: { assignmentCount?: number } = {}) 
                 router.push('/assignments/new');
                 setSidebarOpen(false);
               }}
-              className="create-assignment-shadow flex items-center justify-center gap-2.5 w-full h-[42px] rounded-full bg-[#272727] text-white font-medium text-base hover:bg-black/90 font-inter tracking-tight"
+              className="create-assignment-shadow flex items-center justify-center gap-2.5 w-full h-[42px] rounded-full bg-gradient-to-r from-brand-600 to-brand-500 text-white font-medium text-base hover:from-brand-500 hover:to-brand-400 font-inter tracking-tight"
             >
               <Sparkles className="h-[18px] w-[18px]" />
               <span>Create Assignment</span>
@@ -290,8 +298,8 @@ export function Sidebar({ assignmentCount }: { assignmentCount?: number } = {}) 
           </div>
         )}
 
-        <nav className="flex flex-col gap-1">
-          <p className="px-3 mb-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-subtle">
+        <nav className="flex flex-col gap-1.5">
+          <p className="px-1.5 mb-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-subtle">
             Menu
           </p>
           {PRIMARY.map((item) => {
@@ -305,24 +313,22 @@ export function Sidebar({ assignmentCount }: { assignmentCount?: number } = {}) 
                 onClick={() => setSidebarOpen(false)}
                 aria-current={active ? 'page' : undefined}
                 className={cn(
-                  'group relative flex items-center gap-3 rounded-xl px-3 h-[40px] text-[15px] tracking-[-0.02em] transition-all duration-150',
+                  'group relative flex items-center gap-3 rounded-2xl pl-2 pr-3 h-[46px] text-[15px] tracking-[-0.02em] transition-all duration-150',
                   active
                     ? 'bg-brand-50 text-brand-700 font-semibold'
                     : 'text-ink-muted hover:bg-surface-alt hover:text-ink font-normal',
                 )}
               >
-                {active && (
-                  <span
-                    aria-hidden
-                    className="absolute -left-3 top-1/2 h-5 w-1 -translate-y-1/2 rounded-r-full bg-brand-600"
-                  />
-                )}
-                <Icon
+                <span
                   className={cn(
-                    'h-5 w-5 shrink-0 transition-transform duration-150',
-                    !active && 'group-hover:scale-105',
+                    'flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-xl transition-all duration-150',
+                    active
+                      ? 'bg-brand-600 text-white shadow-[0_4px_10px_-2px_rgba(36,86,224,0.45)]'
+                      : 'bg-surface-alt text-ink-muted group-hover:bg-white group-hover:text-ink group-hover:shadow-card',
                   )}
-                />
+                >
+                  <Icon className="h-[19px] w-[19px]" />
+                </span>
                 <span className="flex-1">{item.label}</span>
                 {showBadge && (
                   <span
@@ -342,19 +348,28 @@ export function Sidebar({ assignmentCount }: { assignmentCount?: number } = {}) 
         <div className="flex-1" />
 
         <div className="flex flex-col gap-2">
-          <div className="mx-3 mb-1 h-px bg-border" />
+          <div className="mx-1.5 mb-1 h-px bg-border" />
           <Link
             href="/settings"
             onClick={() => setSidebarOpen(false)}
             aria-current={pathname.startsWith('/settings') ? 'page' : undefined}
             className={cn(
-              'group flex items-center gap-3 rounded-xl px-3 h-[40px] text-[15px] tracking-[-0.02em] transition-all duration-150',
+              'group flex items-center gap-3 rounded-2xl pl-2 pr-3 h-[46px] text-[15px] tracking-[-0.02em] transition-all duration-150',
               pathname.startsWith('/settings')
                 ? 'bg-brand-50 text-brand-700 font-semibold'
                 : 'text-ink-muted hover:bg-surface-alt hover:text-ink font-normal',
             )}
           >
-            <Settings className="h-5 w-5 shrink-0 transition-transform duration-150 group-hover:rotate-45" />
+            <span
+              className={cn(
+                'flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-xl transition-all duration-150',
+                pathname.startsWith('/settings')
+                  ? 'bg-brand-600 text-white shadow-[0_4px_10px_-2px_rgba(36,86,224,0.45)]'
+                  : 'bg-surface-alt text-ink-muted group-hover:bg-white group-hover:text-ink group-hover:shadow-card',
+              )}
+            >
+              <Settings className="h-[19px] w-[19px] transition-transform duration-150 group-hover:rotate-45" />
+            </span>
             <span>Settings</span>
           </Link>
 

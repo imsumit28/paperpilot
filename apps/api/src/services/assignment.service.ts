@@ -31,8 +31,12 @@ export function toDto(doc: AssignmentHydrated): AssignmentDto {
   });
 }
 
-export async function createAssignment(input: CreateAssignmentInput): Promise<AssignmentDto> {
+export async function createAssignment(
+  deviceId: string,
+  input: CreateAssignmentInput,
+): Promise<AssignmentDto> {
   const doc = await AssignmentModel.create({
+    deviceId,
     title: input.title,
     subject: input.subject,
     class: input.class,
@@ -56,14 +60,18 @@ export async function createAssignment(input: CreateAssignmentInput): Promise<As
   return toDto(doc);
 }
 
-export async function listAssignments(params: { page: number; pageSize: number }) {
+export async function listAssignments(
+  deviceId: string,
+  params: { page: number; pageSize: number },
+) {
   const { page, pageSize } = params;
+  const filter = { deviceId };
   const [items, total] = await Promise.all([
-    AssignmentModel.find()
+    AssignmentModel.find(filter)
       .sort({ createdAt: -1 })
       .skip((page - 1) * pageSize)
       .limit(pageSize),
-    AssignmentModel.countDocuments(),
+    AssignmentModel.countDocuments(filter),
   ]);
   return {
     items: items.map(toDto),
@@ -73,14 +81,14 @@ export async function listAssignments(params: { page: number; pageSize: number }
   };
 }
 
-export async function getAssignment(id: string): Promise<AssignmentDto> {
-  const doc = await AssignmentModel.findById(id);
+export async function getAssignment(deviceId: string, id: string): Promise<AssignmentDto> {
+  const doc = await AssignmentModel.findOne({ _id: id, deviceId });
   if (!doc) throw notFound('Assignment not found');
   return toDto(doc);
 }
 
-export async function deleteAssignment(id: string): Promise<void> {
-  const res = await AssignmentModel.findByIdAndDelete(id);
+export async function deleteAssignment(deviceId: string, id: string): Promise<void> {
+  const res = await AssignmentModel.findOneAndDelete({ _id: id, deviceId });
   if (!res) throw notFound('Assignment not found');
 }
 
@@ -90,10 +98,11 @@ export interface RegenerateOptions {
 }
 
 export async function regenerateAssignment(
+  deviceId: string,
   id: string,
   options: RegenerateOptions = {},
 ): Promise<AssignmentDto> {
-  const doc = await AssignmentModel.findById(id);
+  const doc = await AssignmentModel.findOne({ _id: id, deviceId });
   if (!doc) throw notFound('Assignment not found');
 
   if (options.additionalInfoAppend && options.additionalInfoAppend.trim()) {
