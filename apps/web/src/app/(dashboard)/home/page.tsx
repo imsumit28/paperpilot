@@ -6,10 +6,21 @@ import {
   ArrowDownRight,
   ArrowRight,
   ArrowUpRight,
+  BookOpen,
+  Check,
   ClipboardList,
+  Landmark,
   Minus,
+  Moon,
   Plus,
+  ShieldCheck,
+  Sparkle,
   Sparkles,
+  Sun,
+  Sunrise,
+  Sunset,
+  Wand2,
+  Zap,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { AssignmentDto } from '@paper-pilot/shared';
@@ -28,9 +39,28 @@ function greeting(d: Date): string {
   return 'Good night';
 }
 
-function formatToday(d: Date): string {
-  return d.toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' });
+// Warm time-of-day glyph for the hero eyebrow (sunrise → sun → sunset → moon).
+function TimeIcon({ date, className }: { date: Date; className?: string }) {
+  const h = date.getHours();
+  if (h < 12) return <Sunrise className={className} />;
+  if (h < 17) return <Sun className={className} />;
+  if (h < 21) return <Sunset className={className} />;
+  return <Moon className={className} />;
 }
+
+const HERO_FEATURES = [
+  { Icon: Wand2, title: 'AI-Powered', desc: 'Smarter question generation' },
+  { Icon: BookOpen, title: 'Curriculum Aligned', desc: 'Based on your class and subject' },
+  { Icon: Zap, title: 'Instant Results', desc: 'Structured papers in seconds' },
+  { Icon: ShieldCheck, title: 'Secure & Reliable', desc: 'Your data is safe and private' },
+];
+
+// Decorative question-type chips for the hero scene (illustrative, aria-hidden).
+const HERO_PILLS = [
+  { label: 'MCQs', count: 12, pos: 'left-[2%] top-[20%]' },
+  { label: 'Short Answer', count: 5, pos: 'right-0 top-[40%]' },
+  { label: 'Long Answer', count: 3, pos: 'right-[8%] top-[60%]' },
+];
 
 export default function HomePage() {
   const teacherName = useAuthStore((s) => s.teacherName);
@@ -127,25 +157,100 @@ export default function HomePage() {
       <Topbar title="Home" showBack={false} />
 
       {/* Hero */}
-      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-800 via-brand-700 to-brand-500 px-6 py-7 text-white lg:px-9 lg:py-9">
-        <div className="pointer-events-none absolute -right-16 -top-20 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-24 right-1/4 h-56 w-56 rounded-full bg-accent-400/20 blur-3xl" />
-        <div className="relative z-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-          <div className="min-w-0">
-            <p className="text-[13px] font-medium uppercase tracking-[0.14em] text-white/70">
-              {now ? `${greeting(now)} · ${formatToday(now)}` : 'Welcome'}
-            </p>
-            <h1 className="mt-1 text-[28px] font-bold leading-tight tracking-[-0.02em] lg:text-[36px]">
-              Welcome back, {firstName} 👋
-            </h1>
-            <p className="mt-2 max-w-[46ch] text-sm leading-relaxed text-white/80 lg:text-[15px]">
-              {schoolName ? `${schoolName} · ` : ''}
-              {total > 0
-                ? `${total} assignment${total === 1 ? '' : 's'}${stats.working ? ` · ${stats.working} generating` : ''}.`
-                : 'Generate your first AI question paper in under a minute.'}
-            </p>
+      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-900 via-brand-700 to-brand-600 px-6 py-7 text-white lg:px-9 lg:py-9">
+        <div className="pointer-events-none absolute -right-16 -top-24 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-24 right-1/3 h-56 w-56 rounded-full bg-accent-400/15 blur-3xl" />
+
+        {/* Ambient sparkle field across the whole hero (subtle on all sizes) */}
+        <div className="pointer-events-none absolute inset-0 select-none" aria-hidden>
+          <Sparkle className="absolute left-[42%] top-6 h-3 w-3 text-white/40" fill="currentColor" />
+          <Sparkle className="absolute right-[30%] bottom-8 h-3.5 w-3.5 text-white/30" fill="currentColor" />
+          <span className="absolute right-[40%] top-1/3 h-1 w-1 rounded-full bg-white/40" />
+        </div>
+
+        {/* Right-side scene: blended mark, dashed flight-paths, floating
+            question-type pills and an answer-key checklist. Shown on wide
+            screens where there's room; hidden below xl so copy stays legible. */}
+        <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-[48%] select-none xl:block" aria-hidden>
+          <svg className="absolute inset-0 h-full w-full opacity-40" viewBox="0 0 480 260" fill="none">
+            <path
+              d="M40 150 C 120 60, 250 60, 330 110"
+              stroke="white"
+              strokeWidth="1.5"
+              strokeDasharray="2 7"
+              strokeLinecap="round"
+            />
+            <path
+              d="M330 150 C 410 120, 440 70, 470 40"
+              stroke="white"
+              strokeWidth="1.5"
+              strokeDasharray="2 7"
+              strokeLinecap="round"
+            />
+          </svg>
+
+          {/* Mark blended onto the gradient (multiply drops its white box). */}
+          <img
+            src="/brand/mark.png"
+            alt=""
+            className="absolute right-[24%] top-1/2 h-56 -translate-y-1/2 opacity-90 mix-blend-luminosity drop-shadow-[0_20px_45px_rgba(0,0,0,0.35)]"
+          />
+
+          {HERO_PILLS.map((p) => (
+            <span
+              key={p.label}
+              className={cn(
+                'absolute inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5 text-[13px] font-medium text-white shadow-sm backdrop-blur-md',
+                p.pos,
+              )}
+            >
+              {p.label}
+              <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-white/20 px-1.5 text-[12px] font-bold tabular-nums">
+                {p.count}
+              </span>
+            </span>
+          ))}
+
+          <div className="absolute bottom-[8%] right-[6%] flex flex-col gap-2">
+            {['w-20', 'w-14', 'w-16'].map((w, i) => (
+              <span key={i} className="flex items-center gap-2">
+                <span className="flex h-4 w-4 items-center justify-center rounded-full bg-emerald-400 text-brand-900">
+                  <Check className="h-3 w-3" strokeWidth={3} />
+                </span>
+                <span className={cn('h-2 rounded-full bg-white/30', w)} />
+              </span>
+            ))}
           </div>
-          <div className="flex shrink-0 flex-wrap gap-3">
+        </div>
+
+        <div className="relative z-10 flex max-w-2xl flex-col xl:max-w-[56%]">
+          <p className="flex items-center gap-1.5 text-[13px] font-medium uppercase tracking-[0.14em] text-white/70">
+            {now ? `${greeting(now)}, ${firstName}` : 'Welcome'}
+            {now && <TimeIcon date={now} className="h-4 w-4 text-amber-300" />}
+          </p>
+          <h1 className="mt-1 text-[30px] font-bold leading-[1.05] tracking-[-0.02em] lg:text-[44px]">
+            Create. Assess. Inspire.
+          </h1>
+          <p className="mt-2 text-sm leading-relaxed text-white/80 lg:text-[16px]">
+            AI that understands your classroom.
+          </p>
+
+          <div className="mt-5 grid grid-cols-2 gap-2.5 sm:grid-cols-4">
+            {HERO_FEATURES.map(({ Icon, title, desc }) => (
+              <div
+                key={title}
+                className="flex flex-col gap-1.5 rounded-2xl border border-white/15 bg-white/5 p-3 backdrop-blur-sm transition-colors hover:bg-white/10"
+              >
+                <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-white/10 text-white ring-1 ring-inset ring-white/10">
+                  <Icon className="h-4 w-4" />
+                </span>
+                <div className="text-[13px] font-semibold leading-tight tracking-[-0.01em]">{title}</div>
+                <div className="text-[11px] leading-snug text-white/65">{desc}</div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-6 flex flex-wrap gap-3">
             <Link
               href="/assignments/new"
               className="inline-flex h-12 items-center gap-2 rounded-full bg-white px-6 text-[15px] font-semibold text-brand-700 shadow-sm transition-transform hover:scale-[1.02] active:scale-[0.99]"
