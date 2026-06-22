@@ -52,7 +52,7 @@ export function Topbar({ title = 'Assignment', showBack = true }: TopbarProps) {
 
   return (
     <header className="sticky top-0 z-30 mb-4 bg-[rgba(255,255,255,0.01)] px-[10px] py-[18px] backdrop-blur-0 lg:mx-auto lg:mb-0 lg:h-[56px] lg:w-full lg:max-w-[1100px] lg:rounded-[16px] lg:bg-[rgba(255,255,255,0.75)] lg:px-[24px] lg:py-0 lg:flex lg:items-center">
-      <div className="mx-auto flex h-[56px] w-full max-w-[373px] items-center justify-between rounded-[16px] bg-white px-[12px] pr-4 lg:h-full lg:max-w-none lg:rounded-none lg:bg-transparent lg:px-0 lg:pr-0 lg:gap-[10px]">
+      <div className="mx-auto flex h-[56px] w-full max-w-[400px] sm:max-w-none items-center justify-between rounded-[16px] bg-white px-[12px] pr-4 lg:h-full lg:max-w-none lg:rounded-none lg:bg-transparent lg:px-0 lg:pr-0 lg:gap-[10px]">
         {/* Mobile: Paper Pilot logo | Desktop: Back + label */}
         <div className="flex items-center gap-2 lg:gap-3">
           <div className="lg:hidden flex items-center gap-2">

@@ -222,7 +222,7 @@ export default function AssignmentDetailPage() {
           <GenerationProgress onRetry={handleRegenerate} />
         </div>
       ) : (
-        <div className="w-full max-w-[373px] lg:max-w-[1100px] mx-auto bg-white lg:bg-ink-muted rounded-[40px] lg:rounded-[32px] p-[9px] lg:p-5 flex flex-col gap-[10px] lg:gap-3">
+        <div className="w-full max-w-[400px] sm:max-w-[640px] md:max-w-[820px] lg:max-w-[1100px] mx-auto bg-white lg:bg-ink-muted rounded-[40px] lg:rounded-[32px] p-[9px] lg:p-5 flex flex-col gap-[10px] lg:gap-3">
           <div className="w-full lg:max-w-[1060px] lg:mx-auto min-h-[147px] lg:min-h-[164px] bg-ink lg:bg-ink/90 rounded-[32px] text-white px-4 py-6 lg:px-8 lg:py-6 flex flex-col justify-center items-start gap-3 lg:gap-4 lg:items-center">
             <div className="flex items-start gap-3 max-w-[323px] lg:max-w-none">
               <div className="w-full font-bold text-[14px] leading-[17px] tracking-[-0.02em] text-white/90">

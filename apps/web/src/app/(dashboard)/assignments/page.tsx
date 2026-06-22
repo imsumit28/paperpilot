@@ -235,7 +235,7 @@ export default function AssignmentsPage() {
 
   if (loading && items.length === 0) {
     return (
-      <div className="px-4 lg:px-0 max-w-[373px] lg:max-w-none mx-auto lg:mx-0">
+      <div className="px-4 lg:px-0 max-w-[400px] sm:max-w-[640px] md:max-w-[880px] lg:max-w-none mx-auto lg:mx-0">
         <Topbar title="Assignments" />
         <AssignmentsStrip onBack={() => router.back()} />
         <SkeletonGrid />
@@ -245,7 +245,7 @@ export default function AssignmentsPage() {
 
   if (!loading && items.length === 0) {
     return (
-      <div className="px-4 lg:px-0 max-w-[373px] lg:max-w-none mx-auto lg:mx-0 flex flex-col h-full">
+      <div className="px-4 lg:px-0 max-w-[400px] sm:max-w-[640px] md:max-w-[880px] lg:max-w-none mx-auto lg:mx-0 flex flex-col h-full">
         <Topbar title="Assignments" />
         <AssignmentsStrip onBack={() => router.back()} />
         <div className="flex-1 flex flex-col items-center justify-center gap-3">
@@ -257,7 +257,7 @@ export default function AssignmentsPage() {
   }
 
   return (
-    <div className="px-4 lg:px-0 max-w-[373px] lg:max-w-none mx-auto lg:mx-0">
+    <div className="px-4 lg:px-0 max-w-[400px] sm:max-w-[640px] md:max-w-[880px] lg:max-w-none mx-auto lg:mx-0">
       <Topbar title="Assignments" />
       <AssignmentsStrip onBack={() => router.back()} />
 

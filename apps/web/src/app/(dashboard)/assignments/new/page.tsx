@@ -132,7 +132,7 @@ export default function NewAssignmentPage() {
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-[373px] flex-col items-center gap-6 px-3 pb-24 pt-0 lg:max-w-[1103px] lg:gap-8 lg:px-0 lg:pb-12">
+    <div className="mx-auto flex w-full max-w-[400px] sm:max-w-[560px] md:max-w-[720px] flex-col items-center gap-6 px-3 pb-24 pt-0 lg:max-w-[1103px] lg:gap-8 lg:px-0 lg:pb-12">
       <Topbar title="Assignment" />
 
       <div className="w-full pt-0 lg:pt-[20px]">

@@ -204,10 +204,13 @@ export function Sidebar({ assignmentCount }: { assignmentCount?: number } = {}) 
       <aside
         className={cn(
           'fixed lg:sticky lg:top-0 z-50 lg:z-0',
-          'left-3 top-3 bottom-3 lg:w-[304px] lg:h-[820px] w-72',
+          'left-3 top-3 bottom-3 lg:w-[304px] lg:h-full w-72',
           'lg:max-h-full lg:overflow-y-auto',
-          // Clean white shell with a hairline border and a soft float
-          'relative isolate overflow-hidden rounded-3xl border border-border',
+          // Clean white shell with a hairline border and a soft float.
+          // No `relative` here — it would override the base `fixed` position
+          // (both are position utilities) and break the off-canvas mobile drawer.
+          // `fixed`/`lg:sticky` already establish the containing block the glow needs.
+          'isolate overflow-hidden rounded-3xl border border-border',
           'bg-white',
           'shadow-float',
           'flex flex-col p-6 transition-transform',

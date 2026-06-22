@@ -217,7 +217,7 @@ export function AssignmentCard({
       </div>
 
       {!selectable && (
-        <div className="flex items-center gap-2 border-t border-border pt-3 lg:opacity-0 lg:transition-opacity lg:group-hover:opacity-100">
+        <div className="flex flex-wrap items-center gap-2 border-t border-border pt-3 lg:opacity-0 lg:transition-opacity lg:group-hover:opacity-100">
           <QuickAction href={`/assignments/${assignment.id}`} label="View" icon={<Eye className="h-3.5 w-3.5" />} />
           <QuickAction
             label="Download"
@@ -283,22 +283,32 @@ function QuickAction({
   disabled?: boolean;
   onClick?: () => void;
 }) {
+  // Icon-only on small screens (where a phone-width card can't fit the labels),
+  // expanding to icon + label from `sm` up where there's room.
   const className =
-    'inline-flex h-8 items-center gap-1.5 rounded-full border border-border px-3 text-[12px] font-semibold text-ink-muted transition-colors hover:border-brand-300 hover:text-brand-700 disabled:cursor-not-allowed disabled:opacity-40';
+    'inline-flex h-8 shrink-0 items-center justify-center gap-1.5 rounded-full border border-border px-2 sm:px-3 text-[12px] font-semibold text-ink-muted transition-colors hover:border-brand-300 hover:text-brand-700 disabled:cursor-not-allowed disabled:opacity-40';
+  const text = <span className="hidden sm:inline">{label}</span>;
 
   if (href) {
     return (
-      <Link href={href} title={label} className={className}>
+      <Link href={href} title={label} aria-label={label} className={className}>
         {icon}
-        {label}
+        {text}
       </Link>
     );
   }
 
   return (
-    <button type="button" title={label} disabled={disabled} onClick={onClick} className={className}>
+    <button
+      type="button"
+      title={label}
+      aria-label={label}
+      disabled={disabled}
+      onClick={onClick}
+      className={className}
+    >
       {icon}
-      {label}
+      {text}
     </button>
   );
 }
