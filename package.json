@@ -16,7 +16,9 @@
     "build:web": "pnpm --filter @paper-pilot/web build",
     "start:api": "pnpm --filter @paper-pilot/api start",
     "start:worker": "pnpm --filter @paper-pilot/worker start",
-    "typecheck": "pnpm -r run typecheck"
+    "typecheck": "pnpm -r run typecheck",
+    "benchmark": "node scripts/benchmark.mjs",
+    "benchmark:e2e": "node scripts/benchmark-e2e.mjs"
   },
   "devDependencies": {
     "typescript": "^5.4.5"
