@@ -25,11 +25,16 @@ import { useAuthStore } from '@/store/useAuthStore';
 import { useSavedPapersStore } from '@/store/useSavedPapersStore';
 import { formatDate } from '@/lib/utils';
 
-function greeting(): string {
-  const h = new Date().getHours();
+function greeting(d: Date): string {
+  const h = d.getHours();
   if (h < 12) return 'Good morning';
   if (h < 17) return 'Good afternoon';
-  return 'Good evening';
+  if (h < 21) return 'Good evening';
+  return 'Good night';
+}
+
+function formatToday(d: Date): string {
+  return d.toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' });
 }
 
 const TOOLS = [
@@ -119,6 +124,15 @@ export default function HomePage() {
 
   const firstName = (teacherName || '').trim().split(/\s+/)[0] || 'there';
 
+  // Live clock — keeps the greeting (morning/afternoon/evening) and date fresh
+  // without a reload. null on first render to avoid SSR/client hydration drift.
+  const [now, setNow] = useState<Date | null>(null);
+  useEffect(() => {
+    setNow(new Date());
+    const t = setInterval(() => setNow(new Date()), 60_000);
+    return () => clearInterval(t);
+  }, []);
+
   return (
     <div className="px-4 lg:px-0 pb-24 lg:pb-12">
       <Topbar title="Home" showBack={false} />
@@ -130,7 +144,7 @@ export default function HomePage() {
         <div className="relative z-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="min-w-0">
             <p className="text-[13px] font-medium uppercase tracking-[0.14em] text-white/70">
-              {greeting()}
+              {now ? `${greeting(now)} · ${formatToday(now)}` : 'Welcome'}
             </p>
             <h1 className="mt-1 text-[28px] font-bold leading-tight tracking-[-0.02em] lg:text-[36px]">
               Welcome back, {firstName} 👋
@@ -205,7 +219,6 @@ export default function HomePage() {
             eyebrow="Pick up where you left off"
             title="Recent assignments"
             href="/assignments"
-            cta="See all"
           />
           <div className="mt-3 overflow-hidden rounded-2xl border border-border bg-surface">
             {loading ? (
@@ -247,7 +260,7 @@ export default function HomePage() {
 
         {/* Tools + quick links */}
         <section>
-          <SectionHeader eyebrow="AI Teacher's Toolkit" title="Tools" href="/toolkit" cta="Open" />
+          <SectionHeader eyebrow="AI Teacher's Toolkit" title="Tools" href="/toolkit" />
           <div className="mt-3 flex flex-col gap-3">
             {TOOLS.map(({ href, label, desc, Icon }) => (
               <Link
@@ -427,12 +440,12 @@ function SectionHeader({
   eyebrow,
   title,
   href,
-  cta,
+  cta = 'View all',
 }: {
   eyebrow: string;
   title: string;
   href: string;
-  cta: string;
+  cta?: string;
 }) {
   return (
     <div className="flex items-end justify-between gap-3">
@@ -444,9 +457,10 @@ function SectionHeader({
       </div>
       <Link
         href={href}
-        className="shrink-0 text-[13px] font-semibold text-brand-700 hover:text-brand-800"
+        className="group/sh inline-flex shrink-0 items-center gap-1 text-[13px] font-semibold text-brand-700 hover:text-brand-800"
       >
         {cta}
+        <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover/sh:translate-x-0.5" />
       </Link>
     </div>
   );

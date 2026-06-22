@@ -3,13 +3,14 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { ArrowLeft, ChevronDown, LayoutGrid, Menu } from 'lucide-react';
+import { ArrowLeft, ChevronDown, LayoutGrid, Menu, Search } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useUIStore } from '@/store/useUIStore';
 import { BrandLogo } from './BrandLogo';
 import { UserAvatar } from './UserAvatar';
 import { NotificationsBell } from '@/components/notifications/NotificationsBell';
 import { useAuthStore } from '@/store/useAuthStore';
+import { useCommandStore } from '@/store/useCommandStore';
 
 interface TopbarProps {
   title?: string;
@@ -22,8 +23,15 @@ export function Topbar({ title = 'Assignment', showBack = true }: TopbarProps) {
   const teacherName = useAuthStore((s) => s.teacherName);
   const schoolLogo = useAuthStore((s) => s.schoolLogo);
   const logout = useAuthStore((s) => s.logout);
+  const openCommand = useCommandStore((s) => s.setOpen);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [shortcut, setShortcut] = useState('⌘K');
   const menuRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const isMac = typeof navigator !== 'undefined' && /mac/i.test(navigator.platform);
+    setShortcut(isMac ? '⌘K' : 'Ctrl K');
+  }, []);
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -68,7 +76,31 @@ export function Topbar({ title = 'Assignment', showBack = true }: TopbarProps) {
         </div>
 
         {/* Right side */}
-        <div className="flex items-center justify-end gap-3 w-[116px] lg:w-auto">
+        <div className="flex items-center justify-end gap-2 lg:gap-3">
+          {/* Desktop: search pill with shortcut hint */}
+          <button
+            type="button"
+            onClick={() => openCommand(true)}
+            className="hidden lg:flex items-center gap-2 h-9 w-[200px] pl-3 pr-2 rounded-full bg-surface-alt text-ink-subtle hover:bg-border/60 transition-colors"
+            aria-label="Search (open command palette)"
+          >
+            <Search className="h-4 w-4 shrink-0" />
+            <span className="flex-1 text-left text-[13px]">Search…</span>
+            <kbd className="rounded-md border border-border bg-white px-1.5 py-0.5 text-[11px] font-medium leading-none text-ink-muted">
+              {shortcut}
+            </kbd>
+          </button>
+
+          {/* Mobile: search icon */}
+          <button
+            type="button"
+            onClick={() => openCommand(true)}
+            className="lg:hidden flex h-9 w-9 items-center justify-center rounded-full hover:bg-surface-alt"
+            aria-label="Search"
+          >
+            <Search className="h-5 w-5 text-ink" strokeWidth={2} />
+          </button>
+
           <NotificationsBell />
 
           {/* Mobile: avatar + hamburger */}

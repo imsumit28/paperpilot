@@ -2,6 +2,7 @@ import { Sidebar } from '@/components/layout/Sidebar';
 import { MobileBottomNav } from '@/components/layout/MobileBottomNav';
 import { NotificationsProvider } from '@/components/notifications/NotificationsProvider';
 import { NotificationToast } from '@/components/notifications/NotificationToast';
+import { CommandPalette } from '@/components/command/CommandPalette';
 import { AuthGuard } from '@/components/auth/AuthGuard';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -15,6 +16,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <MobileBottomNav />
         <NotificationsProvider />
         <NotificationToast />
+        <CommandPalette />
       </div>
     </AuthGuard>
   );
