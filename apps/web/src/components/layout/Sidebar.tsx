@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import {
   Book,
+  ChevronRight,
   Flame,
   LayoutGrid,
   Loader2,
@@ -35,8 +36,6 @@ const PRIMARY: NavItem[] = [
   { href: '/toolkit', label: "AI Teacher's Toolkit", icon: Book },
   { href: '/library', label: 'My Library', icon: MyLibraryIcon },
 ];
-
-const MUTED_COLOR = '#5B6072';
 
 const TOOLKIT_OPTIONS: Array<ToolkitOption & { Icon: React.ComponentType<{ className?: string }> }> = [
   {
@@ -80,8 +79,7 @@ function MyGroupsIcon({ className }: { className?: string }) {
         fillRule="evenodd"
         clipRule="evenodd"
         d="M18.0053 0C19.1069 0 20 0.867353 20 1.93727V12.0627C20 12.8063 19.5687 13.452 18.9357 13.7767C18.7114 13.0842 18.552 12.599 18.4574 12.321C18.403 12.1608 18.3777 12.011 18.2979 11.8819C18.2236 11.7617 18.1006 11.6182 17.9791 11.4747L17.9521 11.4428C17.5516 10.968 17.0414 10.3553 16.609 9.82839C16.1946 9.32331 15.8524 8.89639 15.7181 8.78227C15.3989 8.51105 14.9468 8.21401 14.2686 8.21401H9.66755C9.62487 8.2067 9.53035 8.1911 9.41489 8.14943C8.91888 7.97045 7.88479 7.51948 7.36702 7.30995C6.21465 6.13586 5.35029 5.25332 4.77394 4.66235C4.72638 4.61361 4.61117 4.49397 4.42827 4.30347C4.20391 4.06978 3.83109 4.04594 3.57713 4.24907C3.32508 4.45067 3.28322 4.81013 3.48253 5.06133C5.29064 7.33994 6.21755 8.50276 6.2633 8.5498C6.37468 8.66433 6.70673 8.87699 7.11436 9.1439C7.53415 9.41875 8.03354 9.75 8.41755 10.0092C8.77511 10.2505 8.97606 10.3192 9.01596 10.655C9.10394 11.3955 9.21032 12.5105 9.33511 14H1.99468C0.893058 14 0 13.1326 0 12.0627V1.93727C0 0.867353 0.893058 0 1.99468 0H18.0053ZM15.7979 11.7915C15.9066 11.7819 16.0276 11.915 16.0771 11.9594C16.2486 12.1131 16.3003 12.1721 16.4096 12.2694C16.5691 12.4114 16.7331 12.5764 16.7553 12.6051C16.9727 12.99 17.2919 13.7639 17.4073 14L15.4654 14C15.5489 13.0617 15.6021 12.459 15.625 12.1919C15.6516 11.8819 15.6891 11.8011 15.7979 11.7915ZM12.4734 3.06088C11.1955 3.06088 10.1596 4.06699 10.1596 5.30811C10.1596 6.54922 11.1955 7.55534 12.4734 7.55534C13.7513 7.55534 14.7872 6.54922 14.7872 5.30811C14.7872 4.06699 13.7513 3.06088 12.4734 3.06088Z"
-        fill="#5E5E5E"
-        fillOpacity="0.8"
+        fill="currentColor"
       />
     </svg>
   );
@@ -90,15 +88,15 @@ function MyGroupsIcon({ className }: { className?: string }) {
 function AssignmentsIcon({ className }: { className?: string }) {
   return (
     <svg className={className} width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-      <path d="M7.5 14.1667H12.5" stroke="#303030" strokeWidth="2" strokeLinecap="round" />
-      <path d="M7.5 10.8333H12.5" stroke="#303030" strokeWidth="2" strokeLinecap="round" />
-      <path d="M7.5 7.5H8.33333" stroke="#303030" strokeWidth="2" strokeLinecap="round" />
+      <path d="M7.5 14.1667H12.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <path d="M7.5 10.8333H12.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <path d="M7.5 7.5H8.33333" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
       <path
         d="M4.16667 5C4.16667 3.61929 5.28596 2.5 6.66667 2.5H10.9763C11.4183 2.5 11.8423 2.67559 12.1548 2.98816L15.3452 6.17851C15.6577 6.49107 15.8333 6.915 15.8333 7.35702V15C15.8333 16.3807 14.7141 17.5 13.3333 17.5H6.66667C5.28596 17.5 4.16667 16.3807 4.16667 15V5Z"
-        stroke="#303030"
+        stroke="currentColor"
         strokeWidth="2"
       />
-      <path d="M10.8333 2.5V4.16667C10.8333 6.00762 12.3257 7.5 14.1667 7.5H15.8333" stroke="#303030" strokeWidth="2" />
+      <path d="M10.8333 2.5V4.16667C10.8333 6.00762 12.3257 7.5 14.1667 7.5H15.8333" stroke="currentColor" strokeWidth="2" />
     </svg>
   );
 }
@@ -108,16 +106,14 @@ function MyLibraryIcon({ className }: { className?: string }) {
     <svg className={className} width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
       <path
         d="M17.675 13.2417C17.1449 14.4954 16.3157 15.6002 15.2599 16.4594C14.2041 17.3187 12.954 17.9062 11.6187 18.1707C10.2834 18.4351 8.90369 18.3685 7.60013 17.9765C6.29656 17.5845 5.10886 16.8792 4.14086 15.9222C3.17285 14.9652 2.45402 13.7856 2.0472 12.4866C1.64039 11.1876 1.55797 9.80874 1.80717 8.47053C2.05637 7.13232 2.62959 5.87553 3.47671 4.81003C4.32384 3.74453 5.41907 2.90277 6.66667 2.35834"
-        stroke="#5E5E5E"
-        strokeOpacity="0.8"
+        stroke="currentColor"
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
         d="M18.3333 10C18.3333 8.90567 18.1178 7.82204 17.699 6.81099C17.2802 5.79994 16.6664 4.88129 15.8926 4.10746C15.1187 3.33364 14.2001 2.71981 13.189 2.30102C12.178 1.88224 11.0943 1.66669 10 1.66669V10H18.3333Z"
-        stroke="#5E5E5E"
-        strokeOpacity="0.8"
+        stroke="currentColor"
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -294,7 +290,10 @@ export function Sidebar({ assignmentCount }: { assignmentCount?: number } = {}) 
           </div>
         )}
 
-        <nav className="flex flex-col gap-2">
+        <nav className="flex flex-col gap-1">
+          <p className="px-3 mb-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-subtle">
+            Menu
+          </p>
           {PRIMARY.map((item) => {
             const Icon = item.icon;
             const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
@@ -304,18 +303,34 @@ export function Sidebar({ assignmentCount }: { assignmentCount?: number } = {}) 
                 key={item.href}
                 href={item.href}
                 onClick={() => setSidebarOpen(false)}
+                aria-current={active ? 'page' : undefined}
                 className={cn(
-                  'flex items-center gap-2 rounded-lg px-3 h-[38px] text-base tracking-[-0.02em] transition-colors',
+                  'group relative flex items-center gap-3 rounded-xl px-3 h-[40px] text-[15px] tracking-[-0.02em] transition-all duration-150',
                   active
                     ? 'bg-brand-50 text-brand-700 font-semibold'
-                    : 'hover:bg-surface-alt hover:text-ink font-normal',
+                    : 'text-ink-muted hover:bg-surface-alt hover:text-ink font-normal',
                 )}
-                style={!active ? { color: MUTED_COLOR } : undefined}
               >
-                <Icon className="h-5 w-5 shrink-0" />
+                {active && (
+                  <span
+                    aria-hidden
+                    className="absolute -left-3 top-1/2 h-5 w-1 -translate-y-1/2 rounded-r-full bg-brand-600"
+                  />
+                )}
+                <Icon
+                  className={cn(
+                    'h-5 w-5 shrink-0 transition-transform duration-150',
+                    !active && 'group-hover:scale-105',
+                  )}
+                />
                 <span className="flex-1">{item.label}</span>
                 {showBadge && (
-                  <span className="inline-flex h-[20px] min-w-[34px] items-center justify-center rounded-full bg-accent-500 px-[10px] text-[14px] font-semibold leading-[140%] tracking-[-0.02em] text-white">
+                  <span
+                    className={cn(
+                      'inline-flex h-[20px] min-w-[24px] items-center justify-center rounded-full px-[7px] text-[13px] font-semibold leading-none tracking-[-0.02em]',
+                      active ? 'bg-accent-500 text-white' : 'bg-accent-100 text-accent-700',
+                    )}
+                  >
                     {assignmentTotal}
                   </span>
                 )}
@@ -327,29 +342,40 @@ export function Sidebar({ assignmentCount }: { assignmentCount?: number } = {}) 
         <div className="flex-1" />
 
         <div className="flex flex-col gap-2">
+          <div className="mx-3 mb-1 h-px bg-border" />
           <Link
             href="/settings"
             onClick={() => setSidebarOpen(false)}
-            className="flex items-center gap-2 rounded-lg px-3 h-[38px] text-base tracking-[-0.02em] font-normal hover:bg-surface-alt hover:text-ink"
-            style={{ color: MUTED_COLOR }}
+            aria-current={pathname.startsWith('/settings') ? 'page' : undefined}
+            className={cn(
+              'group flex items-center gap-3 rounded-xl px-3 h-[40px] text-[15px] tracking-[-0.02em] transition-all duration-150',
+              pathname.startsWith('/settings')
+                ? 'bg-brand-50 text-brand-700 font-semibold'
+                : 'text-ink-muted hover:bg-surface-alt hover:text-ink font-normal',
+            )}
           >
-            <Settings className="h-5 w-5 shrink-0" />
+            <Settings className="h-5 w-5 shrink-0 transition-transform duration-150 group-hover:rotate-45" />
             <span>Settings</span>
           </Link>
 
-          <div className="bg-surface-alt rounded-2xl p-3 flex items-center gap-2 h-20">
-            <div className="shrink-0 w-[60px] h-14 rounded-[28px] overflow-hidden bg-brand-100">
-              <UserAvatar size={60} src={schoolLogo} alt={schoolName} />
+          <Link
+            href="/settings"
+            onClick={() => setSidebarOpen(false)}
+            className="group flex items-center gap-3 rounded-2xl border border-border bg-surface-alt p-2.5 transition-all duration-150 hover:border-brand-200 hover:bg-white hover:shadow-card"
+          >
+            <div className="shrink-0 w-12 h-12 rounded-2xl overflow-hidden bg-brand-100 ring-2 ring-white">
+              <UserAvatar size={48} src={schoolLogo} alt={schoolName} />
             </div>
             <div className="min-w-0 flex flex-col">
-              <div className="text-base font-bold text-ink truncate tracking-[-0.02em] leading-[1.4]">
+              <div className="text-[15px] font-bold text-ink truncate tracking-[-0.02em] leading-[1.3]">
                 {schoolName}
               </div>
-              <div className="text-sm font-normal text-ink-muted truncate tracking-[-0.02em] leading-[1.4]">
+              <div className="text-[13px] font-normal text-ink-muted truncate tracking-[-0.02em] leading-[1.3]">
                 {schoolAddress}
               </div>
             </div>
-          </div>
+            <ChevronRight className="h-4 w-4 shrink-0 text-ink-subtle transition-transform duration-150 group-hover:translate-x-0.5 group-hover:text-ink-muted" />
+          </Link>
         </div>
       </aside>
     </>
