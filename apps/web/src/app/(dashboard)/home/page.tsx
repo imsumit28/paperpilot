@@ -157,7 +157,7 @@ export default function HomePage() {
       <Topbar title="Home" showBack={false} />
 
       {/* Hero */}
-      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-900 via-brand-700 to-brand-600 px-6 py-7 text-white lg:px-9 lg:py-9">
+      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-900 via-brand-700 to-brand-600 px-6 py-6 text-white lg:px-8 lg:py-7">
         <div className="pointer-events-none absolute -right-16 -top-24 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-24 right-1/3 h-56 w-56 rounded-full bg-accent-400/15 blur-3xl" />
 
@@ -189,11 +189,12 @@ export default function HomePage() {
             />
           </svg>
 
-          {/* Mark blended onto the gradient (multiply drops its white box). */}
+          {/* Mark framed as a rounded tile so its square white background reads
+              as a deliberate panel with soft corners instead of a hard box. */}
           <img
             src="/brand/mark.png"
             alt=""
-            className="absolute right-[24%] top-1/2 h-56 -translate-y-1/2 opacity-90 mix-blend-luminosity drop-shadow-[0_20px_45px_rgba(0,0,0,0.35)]"
+            className="absolute right-[24%] top-1/2 h-44 -translate-y-1/2 rounded-[24px] opacity-95 shadow-[0_24px_55px_rgba(8,20,60,0.45)] ring-1 ring-white/25"
           />
 
           {HERO_PILLS.map((p) => (
@@ -228,21 +229,21 @@ export default function HomePage() {
             {now ? `${greeting(now)}, ${firstName}` : 'Welcome'}
             {now && <TimeIcon date={now} className="h-4 w-4 text-amber-300" />}
           </p>
-          <h1 className="mt-1 text-[30px] font-bold leading-[1.05] tracking-[-0.02em] lg:text-[44px]">
+          <h1 className="mt-1 text-[26px] font-bold leading-[1.05] tracking-[-0.02em] lg:text-[36px]">
             Create. Assess. Inspire.
           </h1>
-          <p className="mt-2 text-sm leading-relaxed text-white/80 lg:text-[16px]">
+          <p className="mt-2 text-sm leading-relaxed text-white/80 lg:text-[15px]">
             AI that understands your classroom.
           </p>
 
-          <div className="mt-5 grid grid-cols-2 gap-2.5 sm:grid-cols-4">
+          <div className="mt-4 grid grid-cols-2 gap-2.5 sm:grid-cols-4">
             {HERO_FEATURES.map(({ Icon, title, desc }) => (
               <div
                 key={title}
-                className="flex flex-col gap-1.5 rounded-2xl border border-white/15 bg-white/5 p-3 backdrop-blur-sm transition-colors hover:bg-white/10"
+                className="flex flex-col gap-1.5 rounded-2xl border border-white/15 bg-white/5 p-2.5 backdrop-blur-sm transition-colors hover:bg-white/10"
               >
-                <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-white/10 text-white ring-1 ring-inset ring-white/10">
-                  <Icon className="h-4 w-4" />
+                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/10 text-white ring-1 ring-inset ring-white/10">
+                  <Icon className="h-3.5 w-3.5" />
                 </span>
                 <div className="text-[13px] font-semibold leading-tight tracking-[-0.01em]">{title}</div>
                 <div className="text-[11px] leading-snug text-white/65">{desc}</div>
@@ -250,20 +251,20 @@ export default function HomePage() {
             ))}
           </div>
 
-          <div className="mt-6 flex flex-wrap gap-3">
+          <div className="mt-5 flex flex-wrap gap-3">
             <Link
               href="/assignments/new"
-              className="inline-flex h-12 items-center gap-2 rounded-full bg-white px-6 text-[15px] font-semibold text-brand-700 shadow-sm transition-transform hover:scale-[1.02] active:scale-[0.99]"
+              className="inline-flex h-11 items-center gap-2 rounded-full bg-white px-5 text-[14px] font-semibold text-brand-700 shadow-sm transition-transform hover:scale-[1.02] active:scale-[0.99]"
             >
-              <Sparkles className="h-[18px] w-[18px] text-accent-500" />
+              <Sparkles className="h-[17px] w-[17px] text-accent-500" />
               Create assignment
             </Link>
             <Link
               href="/assignments"
-              className="inline-flex h-12 items-center gap-2 rounded-full border border-white/30 bg-white/10 px-5 text-[15px] font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/20"
+              className="inline-flex h-11 items-center gap-2 rounded-full border border-white/30 bg-white/10 px-5 text-[14px] font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/20"
             >
               View all
-              <ArrowRight className="h-[18px] w-[18px]" />
+              <ArrowRight className="h-[17px] w-[17px]" />
             </Link>
           </div>
         </div>
