@@ -8,7 +8,7 @@ const EnvSchema = z.object({
   INTERNAL_API_URL: z.string().url().default('http://localhost:4000'),
   INTERNAL_SECRET: z.string().min(8, 'INTERNAL_SECRET must be at least 8 chars'),
   DEEPSEEK_API_KEY: z.string().min(10, 'DEEPSEEK_API_KEY missing'),
-  DEEPSEEK_MODEL: z.string().default('deepseek-chat'),
+  DEEPSEEK_MODEL: z.string().default('deepseek-v4-flash'),
   DEEPSEEK_TIMEOUT_MS: z.coerce.number().int().positive().default(60_000),
   WORKER_CONCURRENCY: z.coerce.number().int().positive().default(2),
   LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']).default('info'),
